@@ -4,7 +4,7 @@ import products from "../products";
 import Rating from "../components/Rating";
 
 function SingleProduct(props) {
-	const product = products.find(product => product._id === props.match.params._id);
+	const product = products.find(product => product._id === props.match.params.id);
 	const {
 		name,
 		brand,
