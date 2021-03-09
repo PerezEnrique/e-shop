@@ -1,18 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleProduct } from "../state_management/productsState";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
+import getStockOptions from "../utils/getStockOptions";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
-function SingleProduct({ match }) {
+function SingleProduct({ match, history }) {
+	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
 	const { singleProduct, loading, error } = useSelector(state => state.productsReducer);
 
 	useEffect(() => {
 		dispatch(fetchSingleProduct(match.params.id));
 	}, [dispatch, match.params.id]);
+
+	const addToCartHandler = () => {
+		history.push(`/cart?productId=${match.params.id}&qty=${quantity}`);
+	};
 
 	const {
 		name,
@@ -40,12 +46,12 @@ function SingleProduct({ match }) {
 							<Rating value={rating} text={`${numReviews} reviews`} />
 							<h3 className="h4">${price}</h3>
 							<p className="product-desc">{description}</p>
-							<dl className="row w-50">
-								<div className="col">
+							<dl className="d-flex ">
+								<div className="w-25">
 									<dt>Brand</dt>
 									<dd>{brand}</dd>
 								</div>
-								<div className="col">
+								<div className="w-25">
 									<dt>Status</dt>
 									{countInStock > 0 ? (
 										<dd>In Stock</dd>
@@ -54,12 +60,33 @@ function SingleProduct({ match }) {
 									)}
 								</div>
 							</dl>
-							<button
-								className="btn btn-primary"
-								disabled={countInStock < 1 ? true : false}
-							>
-								Add to cart
-							</button>
+							<hr />
+							{countInStock > 0 && (
+								<div className="d-flex align-items-end">
+									<div className="form-group mr-4">
+										<label htmlFor="quantity">Quantity</label>
+										<select
+											className="form-control"
+											id="quantity"
+											value={quantity}
+											onChange={e => setQuantity(e.currentTarget.value)}
+										>
+											{getStockOptions(countInStock).map(option => (
+												<option key={option} value={option}>
+													{option}
+												</option>
+											))}
+										</select>
+									</div>
+									<button
+										className="btn btn-primary mb-3"
+										onClick={addToCartHandler}
+										disabled={countInStock < 1 ? true : false}
+									>
+										Add to cart
+									</button>
+								</div>
+							)}
 						</section>
 					</div>
 				</div>
