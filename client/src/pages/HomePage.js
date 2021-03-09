@@ -9,9 +9,7 @@ function HomePage() {
 	const dispatch = useDispatch();
 	const { products, loading, error } = useSelector(state => state.productsReducer);
 
-	useEffect(() => {
-		dispatch(fetchProducts());
-	}, [dispatch]);
+	useEffect(() => dispatch(fetchProducts()), [dispatch]);
 
 	return (
 		<main className="container" role="main">
