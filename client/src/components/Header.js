@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 
@@ -27,9 +28,9 @@ function Header() {
 					<div className="collapse navbar-collapse" id="navbarNav">
 						<ul className="navbar-nav ml-auto">
 							<li className="nav-item">
-								<a className="nav-link" href="/">
+								<Link className="nav-link" to="/cart">
 									<FaShoppingCart /> Cart (1)
-								</a>
+								</Link>
 							</li>
 							<li className="nav-item">
 								<a className="nav-link" href="/">

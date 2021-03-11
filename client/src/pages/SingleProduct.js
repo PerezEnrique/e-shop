@@ -8,16 +8,16 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function SingleProduct({ match, history }) {
+	const { singleProduct, loading, error } = useSelector(state => state.products);
 	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
-	const { singleProduct, loading, error } = useSelector(state => state.productsReducer);
 
 	useEffect(() => {
 		dispatch(fetchSingleProduct(match.params.id));
 	}, [dispatch, match.params.id]);
 
 	const addToCartHandler = () => {
-		history.push(`/cart?productId=${match.params.id}&qty=${quantity}`);
+		history.push(`/cart?productId=${match.params.id}&quantity=${quantity}`);
 	};
 
 	const {
@@ -36,7 +36,7 @@ function SingleProduct({ match, history }) {
 			{loading ? (
 				<Spinner />
 			) : error ? (
-				<Alert message={error} />
+				<Alert type="danger" message={error} />
 			) : (
 				<div className="card mt-3">
 					<div className="row">

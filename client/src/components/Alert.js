@@ -1,8 +1,8 @@
 import React from "react";
 
-function Alert({ message }) {
+function Alert({ type, message }) {
 	return (
-		<div className="alert alert-secondary" role="alert">
+		<div className={`alert alert-${type}`} role="alert">
 			{message}
 		</div>
 	);

@@ -6,8 +6,8 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function HomePage() {
+	const { products, loading, error } = useSelector(state => state.products);
 	const dispatch = useDispatch();
-	const { products, loading, error } = useSelector(state => state.productsReducer);
 
 	useEffect(() => dispatch(fetchProducts()), [dispatch]);
 
@@ -17,7 +17,7 @@ function HomePage() {
 			{loading ? (
 				<Spinner />
 			) : error ? (
-				<Alert message={error} />
+				<Alert type="danger" message={error} />
 			) : (
 				<div className="row">
 					{products.map(product => (
