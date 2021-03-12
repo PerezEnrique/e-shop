@@ -1,11 +1,11 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { addItem } from "../state_management/cartState";
+import { addItem, removeItem } from "../state_management/cartState";
 import getStockOptions from "../utils/getStockOptions";
 
 function ProductRow({ item }) {
-	const { id, name, image, brand, price, countInStock, quantity } = item;
+	const { _id, name, image, brand, price, countInStock, quantity } = item;
 	const dispatch = useDispatch();
 
 	return (
@@ -14,7 +14,7 @@ function ProductRow({ item }) {
 				<img className="img-fluid rounded" src={image} alt={name} />
 			</td>
 			<td className="col-md-4" headers="product-name">
-				<Link className="text-decoration-none text-dark" to={`/products/${id}`}>
+				<Link className="text-decoration-none text-dark" to={`/products/${_id}`}>
 					{name}
 				</Link>
 				<dl className="mt-2 small text-muted">
@@ -35,7 +35,7 @@ function ProductRow({ item }) {
 				<select
 					className="form-control"
 					value={quantity}
-					onChange={e => dispatch(addItem(id, e.currentTarget.value))}
+					onChange={e => dispatch(addItem(_id, e.currentTarget.value))}
 				>
 					{getStockOptions(countInStock).map(option => (
 						<option key={option} value={option}>
@@ -45,7 +45,9 @@ function ProductRow({ item }) {
 				</select>
 			</td>
 			<td className="col-md-2">
-				<button className="btn btn-light">Remove</button>
+				<button className="btn btn-light" onClick={() => dispatch(removeItem(_id))}>
+					Remove
+				</button>
 			</td>
 		</tr>
 	);

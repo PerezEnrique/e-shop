@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import queryString from "query-string";
 import { addItem } from "../state_management/cartState";
 import ProductRow from "../components/ProductRow";
+import Spinner from "../components/Spinner";
 
-function CartPage({ location }) {
-	const { cartItems } = useSelector(state => state.cart);
+function CartPage({ location, history }) {
+	const { cartItems, loading } = useSelector(state => state.cart);
 	const dispatch = useDispatch();
 	const { productId, quantity } = queryString.parse(location.search);
 
@@ -16,10 +17,19 @@ function CartPage({ location }) {
 		}
 	}, [dispatch, productId, quantity]);
 
+	const checkoutHandler = () => {
+		alert("checking out!!!");
+	};
+
 	return (
 		<main className="container" role="main">
 			<h1 className="mb-4 h2">Shopping cart</h1>
-			{cartItems.length < 1 ? (
+			{loading ? (
+				<div>
+					<Spinner />
+					<h2>Loading your products...</h2>
+				</div>
+			) : cartItems.length < 1 ? (
 				<h2>
 					Your cart is empty <Link to="/">go back</Link> to add some products
 				</h2>
@@ -45,7 +55,7 @@ function CartPage({ location }) {
 							</thead>
 							<tbody>
 								{cartItems.map(item => (
-									<ProductRow id={item.id} item={item} />
+									<ProductRow key={item._id} item={item} />
 								))}
 							</tbody>
 						</table>
@@ -63,7 +73,11 @@ function CartPage({ location }) {
 									.toFixed(2)}
 							</p>
 							<hr />
-							<button className="btn btn-primary w-100" disabled={cartItems.length < 1}>
+							<button
+								className="btn btn-primary w-100"
+								onClick={checkoutHandler}
+								disabled={cartItems.length < 1}
+							>
 								Proceed to checkout
 							</button>
 						</div>

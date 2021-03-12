@@ -1,17 +1,11 @@
 import { createAction } from "@reduxjs/toolkit";
 import http from "../services/httpServices";
 
+//ACTIONS
 const PRODUCTS_FETCHING_START = createAction("PRODUCTS_FETCHING_START");
 const PRODUCTS_FETCHING_SUCCESS = createAction("PRODUCTS_FETCHING_SUCCESS");
 const SINGLE_PRODUCT_FETCHING_SUCCESS = createAction("SINGLE_PRODUCT_FETCHING_SUCCESS");
 const PRODUCTS_FETCHING_FAILS = createAction("PRODUCTS_FETCHING_FAILS");
-
-const initialState = {
-	products: [],
-	singleProduct: {},
-	loading: false,
-	error: null,
-};
 
 export const fetchProducts = () => async dispatch => {
 	try {
@@ -43,6 +37,14 @@ export const fetchSingleProduct = productId => async dispatch => {
 			)
 		);
 	}
+};
+
+//REDUCER
+const initialState = {
+	products: [],
+	singleProduct: {},
+	loading: false,
+	error: null,
 };
 
 export default function productReducer(state = initialState, action) {
