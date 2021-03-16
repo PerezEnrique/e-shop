@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import generateStore from "./state_management/store";
 import App from "./App";
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.bundle.js";
 
 (function () {
 	const store = generateStore();

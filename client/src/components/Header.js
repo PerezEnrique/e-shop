@@ -1,9 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 
 function Header() {
+	const { currentUser } = useSelector(state => state.user);
+
+	const cartCount = localStorage.getItem("cart")
+		? JSON.parse(localStorage.getItem("cart")).length
+		: null;
+
 	return (
 		<header
 			className="navbar navbar-expand-lg navbar-light shadow-sm mb-4"
@@ -11,9 +18,9 @@ function Header() {
 		>
 			<IconContext.Provider value={{ className: "header-icons" }}>
 				<div className="container">
-					<a className="navbar-brand text-primary font-weight-bold" href="/">
+					<Link className="navbar-brand text-primary font-weight-bold" to="/">
 						E-SHOP
-					</a>
+					</Link>
 					<button
 						className="navbar-toggler"
 						type="button"
@@ -29,14 +36,39 @@ function Header() {
 						<ul className="navbar-nav ml-auto">
 							<li className="nav-item">
 								<Link className="nav-link" to="/cart">
-									<FaShoppingCart /> Cart (1)
+									<FaShoppingCart /> Cart {cartCount && `(${cartCount})`}
 								</Link>
 							</li>
-							<li className="nav-item">
-								<a className="nav-link" href="/">
-									<FaUser /> Log in
-								</a>
-							</li>
+							{!currentUser ? (
+								<li className="nav-item">
+									<Link className="nav-link" to="/log-in">
+										<FaUser /> Log in
+									</Link>
+								</li>
+							) : (
+								<li className="nav-item dropdown">
+									<Link
+										className="nav-link dropdown-toggle"
+										to="#"
+										id="navbarDropdown"
+										role="button"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false"
+									>
+										{currentUser.name}
+									</Link>
+									<div className="dropdown-menu" aria-labelledby="navbarDropdown">
+										<Link className="dropdown-item" to="/user">
+											Your profile
+										</Link>
+										<div className="dropdown-divider"></div>
+										<Link className="dropdown-item" to="/log-out">
+											Log out
+										</Link>
+									</div>
+								</li>
+							)}
 						</ul>
 					</div>
 				</div>

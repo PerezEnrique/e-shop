@@ -9,7 +9,7 @@ const USER_SIGNUP_FAILS = createAction("USER_SIGNUP_FAILS");
 const USER_LOGIN_REQUEST = createAction("USER_LOGIN_REQUEST");
 const USER_LOGIN_SUCCESS = createAction("USER_LOGIN_SUCCESS");
 const USER_LOGIN_FAILS = createAction("USER_LOGIN_FAILS");
-// const USER_LOGOUT = createAction("USER_LOGOUT");
+const USER_LOGOUT = createAction("USER_LOGOUT");
 
 export const signUp = (email, name, password) => async dispatch => {
 	try {
@@ -45,6 +45,12 @@ export const logIn = (email, password) => async dispatch => {
 	}
 };
 
+export const logOut = () => dispatch => {
+	localStorage.removeItem("authToken");
+	dispatch(USER_LOGOUT());
+	window.location = "/";
+};
+
 const initialState = {
 	currentUser: localStorage.getItem("authToken")
 		? decodeToken(localStorage.getItem("authToken"))
@@ -67,6 +73,8 @@ export function userReducer(state = initialState, action) {
 			return { ...state, currentUser: action.payload, loading: false };
 		case USER_LOGIN_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
+		case USER_LOGOUT.type:
+			return { ...state, currentUser: null };
 		default:
 			return state;
 	}
