@@ -8,8 +8,9 @@ const prepareDataForClient = require("../utils/helpers").prepareDataForClient;
 //desc: saves user in db
 async function saveUser(req, res) {
 	const { email, name, password } = req.body;
-	const { error } = validateSignUp(req.body);
-	if (error) return res.status(400).json({ success: false, errorMessage: error.message });
+	const validationError = validateSignUp(req.body);
+	if (validationError)
+		return res.status(400).json({ success: false, errorMessage: validationError });
 
 	const userAlreadyExists = await User.findOne({ email });
 	if (userAlreadyExists)
@@ -36,8 +37,9 @@ async function saveUser(req, res) {
 //desc: logs user in
 async function authenticateUser(req, res) {
 	const { email, password } = req.body;
-	const { error } = validateLogIn(req.body);
-	if (error) return res.status(400).json({ success: false, errorMessage: error.message });
+	const validationError = validateLogIn(req.body);
+	if (validationError)
+		return res.status(400).json({ success: false, errorMessage: validationError });
 
 	const user = await User.findOne({ email });
 	if (!user)

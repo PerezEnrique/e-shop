@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { addItem, removeItem } from "../state_management/cartState";
-import getStockOptions from "../utils/getStockOptions";
+import { getStockOptions } from "../utils/helpers";
 
 function ProductRow({ item }) {
 	const { _id, name, image, brand, price, countInStock, quantity } = item;

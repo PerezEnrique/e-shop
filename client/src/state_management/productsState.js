@@ -4,8 +4,10 @@ import http from "../services/httpServices";
 //ACTIONS
 const PRODUCTS_FETCHING_START = createAction("PRODUCTS_FETCHING_START");
 const PRODUCTS_FETCHING_SUCCESS = createAction("PRODUCTS_FETCHING_SUCCESS");
-const SINGLE_PRODUCT_FETCHING_SUCCESS = createAction("SINGLE_PRODUCT_FETCHING_SUCCESS");
 const PRODUCTS_FETCHING_FAILS = createAction("PRODUCTS_FETCHING_FAILS");
+const SINGLE_PRODUCT_FETCHING_START = createAction("SINGLE_PRODUCT_FETCHING_START");
+const SINGLE_PRODUCT_FETCHING_SUCCESS = createAction("SINGLE_PRODUCT_FETCHING_SUCCESS");
+const SINGLE_PRODUCT_FETCHING_FAILS = createAction("SINGLE_PRODUCT_FETCHING_FAILS");
 
 export const fetchProducts = () => async dispatch => {
 	try {
@@ -25,12 +27,12 @@ export const fetchProducts = () => async dispatch => {
 
 export const fetchSingleProduct = productId => async dispatch => {
 	try {
-		dispatch(PRODUCTS_FETCHING_START());
+		dispatch(SINGLE_PRODUCT_FETCHING_START());
 		const { data } = await http.get(`/products/${productId}`);
 		dispatch(SINGLE_PRODUCT_FETCHING_SUCCESS(data.data));
 	} catch (ex) {
 		dispatch(
-			PRODUCTS_FETCHING_FAILS(
+			SINGLE_PRODUCT_FETCHING_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
 					: ex.message
@@ -53,9 +55,13 @@ export default function productReducer(state = initialState, action) {
 			return { ...state, loading: true };
 		case PRODUCTS_FETCHING_SUCCESS.type:
 			return { ...state, products: action.payload, loading: false };
+		case PRODUCTS_FETCHING_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case SINGLE_PRODUCT_FETCHING_START.type:
+			return { ...state, loading: true };
 		case SINGLE_PRODUCT_FETCHING_SUCCESS.type:
 			return { ...state, singleProduct: action.payload, loading: false };
-		case PRODUCTS_FETCHING_FAILS.type:
+		case SINGLE_PRODUCT_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		default:
 			return state;

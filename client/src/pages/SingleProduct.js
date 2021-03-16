@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleProduct } from "../state_management/productsState";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
-import getStockOptions from "../utils/getStockOptions";
+import { getStockOptions } from "../utils/helpers";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
