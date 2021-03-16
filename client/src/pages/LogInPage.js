@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { signUp } from "../state_management/userState";
+import { logIn } from "../state_management/userState";
 import { renderInputGroup, objectIsEmpty } from "../utils/helpers";
-import { validateSignUp } from "../utils/validation";
+import { validateLogIn } from "../utils/validation";
 import Spinner from "../components/Spinner";
 
-function SignUpPage({ location, history }) {
+function LogInPage({ location, history }) {
 	const { currentUser, loading, error } = useSelector(state => state.user);
 	const dispatch = useDispatch();
 	const [userData, setUserData] = useState({
 		email: "",
-		name: "",
 		password: "",
-		confirmPassword: "",
 	});
 	const [validationErrors, setValidationErrors] = useState({});
 
@@ -35,18 +33,19 @@ function SignUpPage({ location, history }) {
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateSignUp(userData);
+		const errorsFromValidation = validateLogIn(userData);
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			const { email, name, password } = userData;
-			dispatch(signUp(email, name, password));
+			const { email, password } = userData;
+			dispatch(logIn(email, password));
 		}
 	};
 
 	return (
 		<main className="container text-center" role="main">
-			<h1>Sign up</h1>
+			<h1>Log In</h1>
+
 			{loading && <Spinner />}
 			<div className="row">
 				<div className="card col-10 col-md-6 mx-auto mt-4">
@@ -63,34 +62,18 @@ function SignUpPage({ location, history }) {
 							{renderInputGroup(
 								userData,
 								validationErrors,
-								"Name",
-								"text",
-								"name",
-								handleChange
-							)}
-							{renderInputGroup(
-								userData,
-								validationErrors,
 								"Password",
 								"password",
 								"password",
 								handleChange
 							)}
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Confirm password",
-								"password",
-								"confirmPassword",
-								handleChange
-							)}
 							{error && <div className="alert alert-danger">{error}</div>}
 							<div className="text-center">
 								<button className="mb-2 btn btn-primary" type="submit" disabled={loading}>
-									Sign up
+									Log In
 								</button>
 								<p>
-									Already have an account? Log in <Link to="/log-in">here</Link>
+									Dont't have an account? Sign up <Link to="/sign-up">here</Link>
 								</p>
 							</div>
 						</form>
@@ -101,4 +84,4 @@ function SignUpPage({ location, history }) {
 	);
 }
 
-export default SignUpPage;
+export default LogInPage;

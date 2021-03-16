@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import InputGroup from "../components/InputGroup";
 
 export function getStockOptions(count) {
@@ -25,6 +26,12 @@ export function renderInputGroup(data, errors, label, type, name, handleChange) 
 			error={errors[name]}
 		/>
 	);
+}
+
+export function decodeToken(token) {
+	try {
+		return jwtDecode(token);
+	} catch (ex) {}
 }
 
 export function objectIsEmpty(object) {

@@ -22,3 +22,20 @@ export function validateSignUp(userData) {
 
 	return errors;
 }
+
+export function validateLogIn(userData) {
+	const schema = Joi.object({
+		email: Joi.string().email().required().label("Email"),
+		password: Joi.string().required().label("Password"),
+	});
+
+	const errors = {};
+	const { error } = schema.validate(userData, { abortEarly: false });
+	if (error) {
+		for (let item of error.details) {
+			errors[item.path[0]] = item.message;
+		}
+	}
+
+	return errors;
+}
