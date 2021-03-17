@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { saveShippingData } from "../state_management/cartState";
+import CheckoutSteps from "../components/CheckoutSteps";
+import Spinner from "../components/Spinner";
 import { renderInputGroup, objectIsEmpty } from "../utils/helpers";
 import { validateShippingData } from "../utils/validation";
-import Spinner from "../components/Spinner";
 
 function ShippingPage({ history }) {
 	const { shippingData: currentData } = useSelector(state => state.cart);
@@ -38,6 +39,7 @@ function ShippingPage({ history }) {
 
 	return (
 		<main className="container text-center" role="main">
+			<CheckoutSteps step1 step2 />
 			<h1>Shipping</h1>
 			{/* {loading && <Spinner />} */}
 			<div className="row justify-content-center">

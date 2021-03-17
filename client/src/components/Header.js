@@ -32,7 +32,7 @@ function Header() {
 					>
 						<span className="navbar-toggler-icon"></span>
 					</button>
-					<div className="collapse navbar-collapse" id="navbarNav">
+					<nav className="collapse navbar-collapse" id="navbarNav">
 						<ul className="navbar-nav ml-auto">
 							<li className="nav-item">
 								<Link className="nav-link" to="/cart">
@@ -70,7 +70,7 @@ function Header() {
 								</li>
 							)}
 						</ul>
-					</div>
+					</nav>
 				</div>
 			</IconContext.Provider>
 		</header>
