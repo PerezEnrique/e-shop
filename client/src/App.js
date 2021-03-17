@@ -7,6 +7,7 @@ import CartPage from "./pages/CartPage";
 import SignupPage from "./pages/SignUpPage";
 import LogInPage from "./pages/LogInPage";
 import LogOutPage from "./pages/LogOutPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 				<Route path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />
 				<Route path="/log-in" component={LogInPage} />
+				<Route path="/user" component={ProfilePage} />
 				<Route path="/cart" component={CartPage} />
 				<Route exact path="/" component={HomePage} />
 			</Switch>

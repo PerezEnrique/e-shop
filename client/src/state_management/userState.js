@@ -10,6 +10,11 @@ const USER_LOGIN_REQUEST = createAction("USER_LOGIN_REQUEST");
 const USER_LOGIN_SUCCESS = createAction("USER_LOGIN_SUCCESS");
 const USER_LOGIN_FAILS = createAction("USER_LOGIN_FAILS");
 const USER_LOGOUT = createAction("USER_LOGOUT");
+const USER_UPDATE_PROFILE_REQUEST = createAction("USER_UPDATE_PROFILE_REQUEST");
+const USER_UPDATE_PROFILE_SUCCESS = createAction("USER_UPDATE_PROFILE_SUCCESS");
+const USER_UPDATE_PROFILE_FAILS = createAction("USER_UPDATE_PROFILE_FAILS");
+
+http.setAuthToken(localStorage.getItem("authToken"));
 
 export const signUp = (email, name, password) => async dispatch => {
 	try {
@@ -51,11 +56,35 @@ export const logOut = () => dispatch => {
 	window.location = "/";
 };
 
+export const updateProfile = (email, name, password) => async dispatch => {
+	try {
+		let dataToUpdate = {};
+		if (!password || password === "") {
+			dataToUpdate = { email, name };
+		} else {
+			dataToUpdate = { email, name, password };
+		}
+		dispatch(USER_UPDATE_PROFILE_REQUEST());
+		const { headers, data } = http.put("/user", dataToUpdate);
+		dispatch(USER_UPDATE_PROFILE_SUCCESS(data.data));
+		localStorage.setItem("authToken", headers["x-auth-token"]);
+	} catch (ex) {
+		dispatch(
+			USER_UPDATE_PROFILE_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: ex.message
+			)
+		);
+	}
+};
+
 const initialState = {
 	currentUser: localStorage.getItem("authToken")
 		? decodeToken(localStorage.getItem("authToken"))
 		: null,
 	loading: false,
+	successfulUpdate: false,
 	error: null,
 };
 
@@ -75,6 +104,17 @@ export function userReducer(state = initialState, action) {
 			return { ...state, loading: false, error: action.payload };
 		case USER_LOGOUT.type:
 			return { ...state, currentUser: null };
+		case USER_UPDATE_PROFILE_REQUEST.type:
+			return { ...state, loading: true };
+		case USER_UPDATE_PROFILE_SUCCESS.type:
+			return {
+				...state,
+				currentUser: action.payload,
+				loading: false,
+				successfulUpdate: true,
+			};
+		case USER_UPDATE_PROFILE_FAILS.type:
+			return { ...state, loading: false, successfulUpdate: false, error: action.payload };
 		default:
 			return state;
 	}
