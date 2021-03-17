@@ -15,7 +15,15 @@ export function getStockOptions(count) {
 	return options;
 }
 
-export function renderInputGroup(data, errors, label, type, name, handleChange) {
+export function renderInputGroup(
+	data,
+	errors,
+	label,
+	type = "text",
+	name,
+	handleChange,
+	required = false
+) {
 	return (
 		<InputGroup
 			label={label}
@@ -23,6 +31,7 @@ export function renderInputGroup(data, errors, label, type, name, handleChange) 
 			name={name}
 			value={data[name]}
 			onChange={handleChange}
+			required={required}
 			error={errors[name]}
 		/>
 	);

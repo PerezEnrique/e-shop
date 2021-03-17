@@ -62,3 +62,22 @@ export function validateDataToUpdate(userData) {
 
 	return errors;
 }
+
+export function validateShippingData(userData) {
+	const schema = Joi.object({
+		address: Joi.string().required().label("Adress"),
+		city: Joi.string().required().label("City"),
+		postalCode: Joi.string().required().label("Postal code"),
+		country: Joi.string().required().label("Country"),
+	});
+
+	const errors = {};
+	const { error } = schema.validate(userData, { abortEarly: false });
+	if (error) {
+		for (let item of error.details) {
+			errors[item.path[0]] = item.message;
+		}
+	}
+
+	return errors;
+}

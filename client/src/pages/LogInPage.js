@@ -26,7 +26,7 @@ function LogInPage({ location, history }) {
 	const handleChange = e => {
 		setValidationErrors({});
 		const { name, value } = e.currentTarget;
-		const data = userData;
+		const data = { ...userData };
 		data[name] = value;
 		setUserData(data);
 	};
@@ -57,7 +57,8 @@ function LogInPage({ location, history }) {
 								"Email",
 								"email",
 								"email",
-								handleChange
+								handleChange,
+								true
 							)}
 							{renderInputGroup(
 								userData,
@@ -65,7 +66,8 @@ function LogInPage({ location, history }) {
 								"Password",
 								"password",
 								"password",
-								handleChange
+								handleChange,
+								true
 							)}
 							{error && <div className="alert alert-danger">{error}</div>}
 							<div className="text-center">

@@ -1,4 +1,12 @@
-function InputGroup({ label, type = "text", name, value, onChange, error }) {
+function InputGroup({
+	label,
+	type = "text",
+	name,
+	value,
+	onChange,
+	error,
+	required = false,
+}) {
 	return (
 		<div className="form-group">
 			<label htmlFor={name}>{label}</label>
@@ -9,7 +17,8 @@ function InputGroup({ label, type = "text", name, value, onChange, error }) {
 				name={name}
 				value={value}
 				onChange={onChange}
-				placeholder={label}
+				placeholder={`Enter ${label}`}
+				required={required}
 			/>
 			{error && <div className="alert alert-danger">{error}</div>}
 		</div>

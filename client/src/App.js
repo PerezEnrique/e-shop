@@ -1,5 +1,5 @@
 import "./App.css";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Header from "../src/components/Header";
 import HomePage from "./pages/HomePage";
 import SingleProduct from "./pages/SingleProduct";
@@ -8,6 +8,8 @@ import SignupPage from "./pages/SignUpPage";
 import LogInPage from "./pages/LogInPage";
 import LogOutPage from "./pages/LogOutPage";
 import ProfilePage from "./pages/ProfilePage";
+import ShippingPage from "./pages/ShippingPage";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
 	return (
@@ -15,12 +17,15 @@ function App() {
 			<Header />
 			<Switch>
 				<Route path="/product/:id" component={SingleProduct} />
+				<Route path="/shipping" component={ShippingPage} />
 				<Route path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />
 				<Route path="/log-in" component={LogInPage} />
+				<Route path="/not-found" component={PageNotFound} />
 				<Route path="/user" component={ProfilePage} />
 				<Route path="/cart" component={CartPage} />
 				<Route exact path="/" component={HomePage} />
+				<Redirect to="/not-found" />
 			</Switch>
 		</div>
 	);

@@ -28,7 +28,7 @@ function SignUpPage({ location, history }) {
 	const handleChange = e => {
 		setValidationErrors({});
 		const { name, value } = e.currentTarget;
-		const data = userData;
+		const data = { ...userData };
 		data[name] = value;
 		setUserData(data);
 	};
@@ -58,7 +58,8 @@ function SignUpPage({ location, history }) {
 								"Email",
 								"email",
 								"email",
-								handleChange
+								handleChange,
+								true
 							)}
 							{renderInputGroup(
 								userData,
@@ -66,7 +67,8 @@ function SignUpPage({ location, history }) {
 								"Name",
 								"text",
 								"name",
-								handleChange
+								handleChange,
+								true
 							)}
 							{renderInputGroup(
 								userData,
@@ -74,7 +76,8 @@ function SignUpPage({ location, history }) {
 								"Password",
 								"password",
 								"password",
-								handleChange
+								handleChange,
+								true
 							)}
 							{renderInputGroup(
 								userData,
@@ -82,7 +85,8 @@ function SignUpPage({ location, history }) {
 								"Confirm password",
 								"password",
 								"confirmPassword",
-								handleChange
+								handleChange,
+								true
 							)}
 							{error && <div className="alert alert-danger">{error}</div>}
 							<div className="text-center">

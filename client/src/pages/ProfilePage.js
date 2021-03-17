@@ -21,7 +21,7 @@ function ProfilePage() {
 	const handleChange = e => {
 		setValidationErrors({});
 		const { name, value } = e.currentTarget;
-		const data = userData;
+		const data = { ...userData };
 		data[name] = value;
 		setUserData(data);
 	};
@@ -56,7 +56,8 @@ function ProfilePage() {
 								"Email",
 								"email",
 								"email",
-								handleChange
+								handleChange,
+								true
 							)}
 							{renderInputGroup(
 								userData,
@@ -64,7 +65,8 @@ function ProfilePage() {
 								"Name",
 								"text",
 								"name",
-								handleChange
+								handleChange,
+								true
 							)}
 							{renderInputGroup(
 								userData,

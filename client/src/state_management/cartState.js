@@ -6,6 +6,7 @@ const PRODUCT_FETCHING_START = createAction("PRODUCT_FETCHING_START");
 const ADD_ITEM_TO_CART = createAction("ADD_ITEM_TO_CART");
 const PRODUCT_FETCHING_FAILS = createAction("PRODUCT_FETCHING_FAILS");
 const REMOVE_ITEM_FROM_CART = createAction("REMOVE_ITEM_FROM_CART");
+const SAVE_SHIPPING_DATA = createAction("SAVE_SHIPPING_DATA");
 
 export const addItem = (productId, quantity) => async (dispatch, getState) => {
 	try {
@@ -33,9 +34,17 @@ export const removeItem = productId => (dispatch, getState) => {
 	localStorage.setItem("cart", JSON.stringify(getState().cart.cartItems));
 };
 
+export const saveShippingData = data => dispatch => {
+	dispatch(SAVE_SHIPPING_DATA(data));
+	localStorage.setItem("shippingData", JSON.stringify(data));
+};
+
 //REDUCER
 const initialState = {
 	cartItems: localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],
+	shippingData: localStorage.getItem("shippingData")
+		? JSON.parse(localStorage.getItem("shippingData"))
+		: {},
 	loading: false,
 	error: null,
 };
@@ -69,6 +78,11 @@ export default function cartReducer(state = initialState, action) {
 			return {
 				...state,
 				cartItems: state.cartItems.filter(item => item._id !== action.payload),
+			};
+		case SAVE_SHIPPING_DATA.type:
+			return {
+				...state,
+				shippingData: action.payload,
 			};
 		default:
 			return state;
