@@ -14,7 +14,7 @@ const USER_UPDATE_PROFILE_REQUEST = createAction("USER_UPDATE_PROFILE_REQUEST");
 const USER_UPDATE_PROFILE_SUCCESS = createAction("USER_UPDATE_PROFILE_SUCCESS");
 const USER_UPDATE_PROFILE_FAILS = createAction("USER_UPDATE_PROFILE_FAILS");
 
-http.setAuthToken(localStorage.getItem("authToken"));
+http.setAuthToken(localStorage.getItem("authToken")); //If no token the property simply will be undefinned
 
 export const signUp = (email, name, password) => async dispatch => {
 	try {
@@ -27,7 +27,7 @@ export const signUp = (email, name, password) => async dispatch => {
 			USER_SIGNUP_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
-					: ex.message
+					: `Error ocurred. ${ex.message}` //We cannot just use ex.message because that's taken as not handled
 			)
 		);
 	}
@@ -44,7 +44,7 @@ export const logIn = (email, password) => async dispatch => {
 			USER_LOGIN_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
-					: ex.message
+					: `Error ocurred. ${ex.message}`
 			)
 		);
 	}
@@ -65,7 +65,7 @@ export const updateProfile = (email, name, password) => async dispatch => {
 			dataToUpdate = { email, name, password };
 		}
 		dispatch(USER_UPDATE_PROFILE_REQUEST());
-		const { headers, data } = http.put("/user", dataToUpdate);
+		const { headers, data } = await http.put("/user", dataToUpdate);
 		dispatch(USER_UPDATE_PROFILE_SUCCESS(data.data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 	} catch (ex) {
@@ -73,7 +73,7 @@ export const updateProfile = (email, name, password) => async dispatch => {
 			USER_UPDATE_PROFILE_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
-					: ex.message
+					: `Error ocurred. ${ex.message}`
 			)
 		);
 	}
@@ -91,13 +91,13 @@ const initialState = {
 export function userReducer(state = initialState, action) {
 	switch (action.type) {
 		case USER_SIGNUP_REQUEST.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case USER_SIGNUP_SUCCESS.type:
 			return { ...state, currentUser: action.payload, loading: false };
 		case USER_SIGNUP_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case USER_LOGIN_REQUEST.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case USER_LOGIN_SUCCESS.type:
 			return { ...state, currentUser: action.payload, loading: false };
 		case USER_LOGIN_FAILS.type:
@@ -105,7 +105,7 @@ export function userReducer(state = initialState, action) {
 		case USER_LOGOUT.type:
 			return { ...state, currentUser: null };
 		case USER_UPDATE_PROFILE_REQUEST.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null, successfulUpdate: false };
 		case USER_UPDATE_PROFILE_SUCCESS.type:
 			return {
 				...state,

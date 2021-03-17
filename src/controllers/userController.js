@@ -1,6 +1,10 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
-const { validateSignUp, validateLogIn } = require("../utils/validation");
+const {
+	validateSignUp,
+	validateLogIn,
+	validateDataToUpdate,
+} = require("../utils/validation");
 const prepareDataForClient = require("../utils/helpers").prepareDataForClient;
 
 //route: POST /user/sign-up
@@ -65,15 +69,48 @@ async function authenticateUser(req, res) {
 //route: GET /user
 //access: private
 //desc: returns user profile
-async function getUserProfile(req, res) {
-	const user = await User.findById(req.user._id).select("-password");
+// async function getUserProfile(req, res) {
+// 	const user = await User.findById(req.user._id).select("-password");
+// 	if (!user)
+// 		return res
+// 			.status(404)
+// 			.json({ success: false, errorMessage: "Couldn't find user with the provided id" });
+
+// 	const dataForClient = prepareDataForClient(user);
+// 	return res.status(200).json({ success: true, data: dataForClient });
+// }
+
+//route: PUT /user
+//access: private
+//desc: update user's profile
+async function updateUserProfile(req, res) {
+	const { email, name, password } = req.body;
+	const validationError = validateDataToUpdate(req.body);
+	if (validationError)
+		return res.status(400).json({ success: false, errorMessage: validationError });
+
+	const user = await User.findById(req.user._id);
 	if (!user)
 		return res
 			.status(404)
 			.json({ success: false, errorMessage: "Couldn't find user with the provided id" });
 
-	const dataForClient = prepareDataForClient(user);
-	return res.status(200).json({ success: true, data: dataForClient });
+	user.email = email;
+	user.name = name;
+	if (password) {
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
+		user.password = hashedPassword;
+	}
+
+	const updatedUser = await user.save();
+	const token = updatedUser.generateAuthToken();
+	const dataForClient = prepareDataForClient(updatedUser);
+	return res
+		.status(201)
+		.header("x-auth-token", token)
+		.header("access-control-expose-header", "x-auth-token")
+		.json({ success: true, data: dataForClient });
 }
 
-module.exports = { saveUser, authenticateUser, getUserProfile };
+module.exports = { saveUser, authenticateUser, updateUserProfile };

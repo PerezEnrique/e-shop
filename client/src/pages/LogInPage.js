@@ -47,8 +47,8 @@ function LogInPage({ location, history }) {
 			<h1>Log In</h1>
 
 			{loading && <Spinner />}
-			<div className="row">
-				<div className="card col-10 col-md-6 mx-auto mt-4">
+			<div className="row justify-content-center">
+				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
 							{renderInputGroup(

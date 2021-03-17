@@ -4,11 +4,11 @@ const auth = require("../middlewares/auth");
 const {
 	saveUser,
 	authenticateUser,
-	getUserProfile,
+	updateUserProfile,
 } = require("../controllers/userController");
 
-router.get("/", auth, getUserProfile);
 router.post("/sign-up", saveUser);
 router.post("/log-in", authenticateUser);
+router.put("/", auth, updateUserProfile);
 
 module.exports = router;

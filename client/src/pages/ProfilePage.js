@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfile } from "../state_management/userState";
 import { renderInputGroup, objectIsEmpty } from "../utils/helpers";
@@ -11,19 +11,12 @@ function ProfilePage() {
 	);
 	const dispatch = useDispatch();
 	const [userData, setUserData] = useState({
-		email: "",
-		name: "",
+		email: currentUser.email,
+		name: currentUser.name,
 		password: "",
 		confirmPassword: "",
 	});
 	const [validationErrors, setValidationErrors] = useState({});
-
-	useEffect(() => {
-		const data = {};
-		data.email = currentUser.email;
-		data.name = currentUser.name;
-		setUserData(data);
-	}, [currentUser]);
 
 	const handleChange = e => {
 		setValidationErrors({});
@@ -41,15 +34,20 @@ function ProfilePage() {
 		} else {
 			const { email, name, password } = userData;
 			dispatch(updateProfile(email, name, password));
+			// To clean the fields after submition
+			const data = userData;
+			data.password = "";
+			data.confirmPassword = "";
+			setUserData(data);
 		}
 	};
 
 	return (
-		<main className="container text-center" role="main">
+		<main className="container" role="main">
 			<h1>Update profile</h1>
 			{loading && <Spinner />}
 			<div className="row">
-				<div className="card col-10 col-md-3 mx-auto mt-4">
+				<div className="card col-md-3 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
 							{renderInputGroup(

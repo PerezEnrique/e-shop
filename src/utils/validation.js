@@ -35,4 +35,22 @@ function validateLogIn(userData) {
 	return validationError;
 }
 
-module.exports = { validateSignUp, validateLogIn };
+function validateDataToUpdate(userData) {
+	const schema = Joi.object({
+		email: Joi.string().email().required().label("Email"),
+		name: Joi.string().required().label("Name"),
+		password: Joi.string().label("Password"),
+	});
+
+	let validationError = null;
+	const { error } = schema.validate(userData, { abortEarly: false });
+	if (error) {
+		validationError = "";
+		for (let item of error.details) {
+			validationError += ` ${item.message}.`;
+		}
+	}
+	return validationError;
+}
+
+module.exports = { validateSignUp, validateLogIn, validateDataToUpdate };
