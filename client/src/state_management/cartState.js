@@ -7,6 +7,7 @@ const ADD_ITEM_TO_CART = createAction("ADD_ITEM_TO_CART");
 const PRODUCT_FETCHING_FAILS = createAction("PRODUCT_FETCHING_FAILS");
 const REMOVE_ITEM_FROM_CART = createAction("REMOVE_ITEM_FROM_CART");
 const SAVE_SHIPPING_DATA = createAction("SAVE_SHIPPING_DATA");
+const SAVE_PAYMENT_METHOD = createAction("SAVE_PAYMENT_METHOD");
 
 export const addItem = (productId, quantity) => async (dispatch, getState) => {
 	try {
@@ -39,12 +40,18 @@ export const saveShippingData = data => dispatch => {
 	localStorage.setItem("shippingData", JSON.stringify(data));
 };
 
+export const savePaymentMethod = data => dispatch => {
+	dispatch(SAVE_PAYMENT_METHOD(data));
+	localStorage.setItem("paymentMethod", JSON.stringify(data));
+};
+
 //REDUCER
 const initialState = {
 	cartItems: localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],
 	shippingData: localStorage.getItem("shippingData")
 		? JSON.parse(localStorage.getItem("shippingData"))
 		: {},
+	paymentMethod: "paypal",
 	loading: false,
 	error: null,
 };
@@ -83,6 +90,11 @@ export default function cartReducer(state = initialState, action) {
 			return {
 				...state,
 				shippingData: action.payload,
+			};
+		case SAVE_PAYMENT_METHOD.type:
+			return {
+				...state,
+				paymentMethod: action.payload,
 			};
 		default:
 			return state;

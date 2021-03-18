@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfile } from "../state_management/userState";
-import { renderInputGroup, objectIsEmpty } from "../utils/helpers";
+import { objectIsEmpty } from "../utils/helpers";
 import { validateDataToUpdate } from "../utils/validation";
 import Spinner from "../components/Spinner";
 
@@ -50,40 +50,72 @@ function ProfilePage() {
 				<div className="card col-md-3 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Email",
-								"email",
-								"email",
-								handleChange,
-								true
-							)}
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Name",
-								"text",
-								"name",
-								handleChange,
-								true
-							)}
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Password",
-								"password",
-								"password",
-								handleChange
-							)}
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Confirm password",
-								"password",
-								"confirmPassword",
-								handleChange
-							)}
+							<div className="form-group">
+								<label htmlFor="email">Email</label>
+								<input
+									className="form-control"
+									type="email"
+									id="email"
+									name="email"
+									value={userData.email}
+									onChange={handleChange}
+									placeholder="Enter email"
+									required
+								/>
+								{validationErrors.email && (
+									<div className="alert alert-danger">{validationErrors.email}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="name">Email</label>
+								<input
+									className="form-control"
+									type="text"
+									id="name"
+									name="name"
+									value={userData.name}
+									onChange={handleChange}
+									placeholder="Enter name"
+									required
+								/>
+								{validationErrors.name && (
+									<div className="alert alert-danger">{validationErrors.name}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="password">Password</label>
+								<input
+									className="form-control"
+									type="password"
+									id="password"
+									name="password"
+									value={userData.password}
+									onChange={handleChange}
+									placeholder="Enter password"
+									required
+								/>
+								{validationErrors.password && (
+									<div className="alert alert-danger">{validationErrors.password}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="confirmPassword">Password confirmation</label>
+								<input
+									className="form-control"
+									type="password"
+									id="confirmPassword"
+									name="confirmPassword"
+									value={userData.confirmPassword}
+									onChange={handleChange}
+									placeholder="Enter password confirmation"
+									required
+								/>
+								{validationErrors.confirmPassword && (
+									<div className="alert alert-danger">
+										{validationErrors.confirmPassword}
+									</div>
+								)}
+							</div>
 							{error && <div className="alert alert-danger">{error}</div>}
 							{successfulUpdate && (
 								<div className="alert alert-success">Profile successfuly updated</div>

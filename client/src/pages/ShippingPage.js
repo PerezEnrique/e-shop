@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { saveShippingData } from "../state_management/cartState";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Spinner from "../components/Spinner";
-import { renderInputGroup, objectIsEmpty } from "../utils/helpers";
 import { validateShippingData } from "../utils/validation";
+import { objectIsEmpty } from "../utils/helpers";
 
 function ShippingPage({ history }) {
 	const { shippingData: currentData } = useSelector(state => state.cart);
@@ -15,6 +15,7 @@ function ShippingPage({ history }) {
 		country: currentData.country,
 	});
 	const [validationErrors, setValidationErrors] = useState({});
+
 	const dispatch = useDispatch();
 
 	const handleChange = e => {
@@ -46,38 +47,70 @@ function ShippingPage({ history }) {
 				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
-							{renderInputGroup(
-								shippingData,
-								validationErrors,
-								"Address",
-								"text",
-								"address",
-								handleChange
-							)}
-							{renderInputGroup(
-								shippingData,
-								validationErrors,
-								"City",
-								"text",
-								"city",
-								handleChange
-							)}
-							{renderInputGroup(
-								shippingData,
-								validationErrors,
-								"Postal code",
-								"text",
-								"postalCode",
-								handleChange
-							)}
-							{renderInputGroup(
-								shippingData,
-								validationErrors,
-								"Country",
-								"text",
-								"country",
-								handleChange
-							)}
+							<div className="form-group">
+								<label htmlFor="address">Address</label>
+								<input
+									className="form-control"
+									type="text"
+									id="address"
+									name="address"
+									value={shippingData.address}
+									onChange={handleChange}
+									placeholder="Enter address"
+									required
+								/>
+								{validationErrors.address && (
+									<div className="alert alert-danger">{validationErrors.address}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="city">City</label>
+								<input
+									className="form-control"
+									type="text"
+									id="city"
+									name="city"
+									value={shippingData.city}
+									onChange={handleChange}
+									placeholder="Enter city"
+									required
+								/>
+								{validationErrors.city && (
+									<div className="alert alert-danger">{validationErrors.city}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="postalCode">Postal code</label>
+								<input
+									className="form-control"
+									type="text"
+									id="postalCode"
+									name="postalCode"
+									value={shippingData.postalCode}
+									onChange={handleChange}
+									placeholder="Enter Postal code"
+									required
+								/>
+								{validationErrors.postalCode && (
+									<div className="alert alert-danger">{validationErrors.postalCode}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="country">Country</label>
+								<input
+									className="form-control"
+									type="text"
+									id="country"
+									name="country"
+									value={shippingData.country}
+									onChange={handleChange}
+									placeholder="Enter country"
+									required
+								/>
+								{validationErrors.country && (
+									<div className="alert alert-danger">{validationErrors.country}</div>
+								)}
+							</div>
 							{/* {error && <div className="alert alert-danger">{error}</div>} */}
 							<div className="text-center">
 								{/* <button className="mb-2 btn btn-primary" type="submit" disabled={loading}> */}

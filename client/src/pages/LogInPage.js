@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { logIn } from "../state_management/userState";
-import { renderInputGroup, objectIsEmpty } from "../utils/helpers";
-import { validateLogIn } from "../utils/validation";
 import Spinner from "../components/Spinner";
+import { validateLogIn } from "../utils/validation";
+import { objectIsEmpty } from "../utils/helpers";
 
 function LogInPage({ location, history }) {
 	const { currentUser, loading, error } = useSelector(state => state.user);
@@ -51,24 +51,38 @@ function LogInPage({ location, history }) {
 				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Email",
-								"email",
-								"email",
-								handleChange,
-								true
-							)}
-							{renderInputGroup(
-								userData,
-								validationErrors,
-								"Password",
-								"password",
-								"password",
-								handleChange,
-								true
-							)}
+							<div className="form-group">
+								<label htmlFor="email">Email</label>
+								<input
+									className="form-control"
+									type="email"
+									id="email"
+									name="email"
+									value={userData.email}
+									onChange={handleChange}
+									placeholder="Enter email"
+									required
+								/>
+								{validationErrors.email && (
+									<div className="alert alert-danger">{validationErrors.email}</div>
+								)}
+							</div>
+							<div className="form-group">
+								<label htmlFor="password">Password</label>
+								<input
+									className="form-control"
+									type="password"
+									id="password"
+									name="password"
+									value={userData.password}
+									onChange={handleChange}
+									placeholder="Enter password"
+									required
+								/>
+								{validationErrors.password && (
+									<div className="alert alert-danger">{validationErrors.password}</div>
+								)}
+							</div>
 							{error && <div className="alert alert-danger">{error}</div>}
 							<div className="text-center">
 								<button className="mb-2 btn btn-primary" type="submit" disabled={loading}>
