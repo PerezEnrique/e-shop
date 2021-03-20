@@ -17,8 +17,7 @@ function PaymentPage({ history }) {
 	const handleSubmit = e => {
 		e.preventDefault();
 		dispatch(savePaymentMethod(paymentMethod));
-		alert("SUCCESS PUSHING TO PLACE ORDER");
-		// history.push("/payment")
+		history.push("/placeorder");
 	};
 
 	return (
@@ -26,7 +25,7 @@ function PaymentPage({ history }) {
 			<CheckoutSteps step1 step2 step3 />
 			<h1>Payment method</h1>
 			{/* {loading && <Spinner />} */}
-			<div>
+			<section>
 				<form className="mt-3" onSubmit={handleSubmit}>
 					<div className="form-group">
 						<div className="form-check">
@@ -52,7 +51,7 @@ function PaymentPage({ history }) {
 						</button>
 					</div>
 				</form>
-			</div>
+			</section>
 		</main>
 	);
 }

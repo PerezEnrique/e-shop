@@ -48,7 +48,7 @@ function SignUpPage({ location, history }) {
 		<main className="container text-center" role="main">
 			<h1>Sign up</h1>
 			{loading && <Spinner />}
-			<div className="row justify-content-center">
+			<section className="row justify-content-center">
 				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
@@ -130,7 +130,7 @@ function SignUpPage({ location, history }) {
 						</form>
 					</div>
 				</div>
-			</div>
+			</section>
 		</main>
 	);
 }

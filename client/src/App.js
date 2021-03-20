@@ -10,6 +10,7 @@ import LogOutPage from "./pages/LogOutPage";
 import ProfilePage from "./pages/ProfilePage";
 import ShippingPage from "./pages/ShippingPage";
 import PaymentPage from "./pages/PaymentPage";
+import PlaceOrderPage from "./pages/PlaceOrderPage";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
 			<Switch>
 				<Route path="/product/:id" component={SingleProduct} />
 				<Route path="/shipping" component={ShippingPage} />
+				<Route path="/placeorder" component={PlaceOrderPage} />
 				<Route path="/payment" component={PaymentPage} />
 				<Route path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />

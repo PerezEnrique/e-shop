@@ -18,7 +18,7 @@ function CartPage({ location, history }) {
 	}, [dispatch, productId, quantity]);
 
 	const checkoutHandler = () => {
-		alert("checking out!!!");
+		history.push("/shipping");
 	};
 
 	return (
@@ -34,7 +34,7 @@ function CartPage({ location, history }) {
 					Your cart is empty <Link to="/">go back</Link> to add some products
 				</h2>
 			) : (
-				<div className="row justify-content-between">
+				<div className="row justify-content-between align-items-start">
 					<section className="col-md-8 card">
 						<table className="table table-borderless">
 							<thead className="text-muted">
@@ -74,7 +74,7 @@ function CartPage({ location, history }) {
 							</p>
 							<hr />
 							<button
-								className="btn btn-primary w-100"
+								className="btn btn-block btn-primary"
 								onClick={checkoutHandler}
 								disabled={cartItems.length < 1}
 							>

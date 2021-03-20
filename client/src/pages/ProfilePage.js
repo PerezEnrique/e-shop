@@ -46,7 +46,7 @@ function ProfilePage() {
 		<main className="container" role="main">
 			<h1>Update profile</h1>
 			{loading && <Spinner />}
-			<div className="row">
+			<section className="row">
 				<div className="card col-md-3 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
@@ -128,7 +128,7 @@ function ProfilePage() {
 						</form>
 					</div>
 				</div>
-			</div>
+			</section>
 		</main>
 	);
 }

@@ -33,8 +33,7 @@ function ShippingPage({ history }) {
 			setValidationErrors(errorsFromValidation);
 		} else {
 			dispatch(saveShippingData(shippingData));
-			alert("SUCCESS PUSHING TO PAYMENT");
-			// history.push("/payment")
+			history.push("/payment");
 		}
 	};
 
@@ -43,7 +42,7 @@ function ShippingPage({ history }) {
 			<CheckoutSteps step1 step2 />
 			<h1>Shipping</h1>
 			{/* {loading && <Spinner />} */}
-			<div className="row justify-content-center">
+			<section className="row justify-content-center">
 				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
@@ -121,7 +120,7 @@ function ShippingPage({ history }) {
 						</form>
 					</div>
 				</div>
-			</div>
+			</section>
 		</main>
 	);
 }
