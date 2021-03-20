@@ -9,8 +9,8 @@ const prepareDataForClient = require("../utils/helpers").prepareDataForClient;
 
 //route: POST /user/sign-up
 //access: public
-//desc: saves user in db
-async function saveUser(req, res) {
+//desc: creates new user
+async function createUser(req, res) {
 	const { email, name, password } = req.body;
 	const validationError = validateSignUp(req.body);
 	if (validationError)
@@ -26,9 +26,9 @@ async function saveUser(req, res) {
 	const salt = await bcrypt.genSalt(10);
 	const hashedPassword = await bcrypt.hash(password, salt);
 	const newUser = new User({ email, name, password: hashedPassword });
-	const savedUser = await newUser.save();
-	const token = savedUser.generateAuthToken();
-	const dataForClient = prepareDataForClient(savedUser);
+	const createdUser = await newUser.save();
+	const token = createdUser.generateAuthToken();
+	const dataForClient = prepareDataForClient(createdUser);
 	return res
 		.status(201)
 		.header("x-auth-token", token)
@@ -113,4 +113,4 @@ async function updateUserProfile(req, res) {
 		.json({ success: true, data: dataForClient });
 }
 
-module.exports = { saveUser, authenticateUser, updateUserProfile };
+module.exports = { createUser, authenticateUser, updateUserProfile };

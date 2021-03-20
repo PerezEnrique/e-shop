@@ -3,15 +3,15 @@ const Order = require("../models/Order");
 
 // route: POST /order
 //access: private
-//desc: saves a new order on db
-async function saveNewOrder(req, res) {
+//desc: creates a new order
+async function createOrder(req, res) {
 	const {
 		orderItems,
 		shippingData,
 		paymentMethod,
 		itemsPrice,
-		taxPrice,
 		shippingPrice,
+		taxPrice,
 		totalPrice,
 	} = req.body;
 	if (orderItems && orderItems.length === 0)
@@ -23,13 +23,13 @@ async function saveNewOrder(req, res) {
 		shippingData,
 		paymentMethod,
 		itemsPrice,
-		taxPrice,
 		shippingPrice,
+		taxPrice,
 		totalPrice,
 	});
 
-	const savedOrder = await newOrder.save();
-	return res.status(201).json({ success: true, data: savedOrder });
+	const createdOrder = await newOrder.save();
+	return res.status(201).json({ success: true, data: createdOrder });
 }
 
-module.exports = { saveNewOrder };
+module.exports = { createOrder };

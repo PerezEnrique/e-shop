@@ -56,14 +56,8 @@ export const logOut = () => dispatch => {
 	window.location = "/";
 };
 
-export const updateProfile = (email, name, password) => async dispatch => {
+export const updateProfile = dataToUpdate => async dispatch => {
 	try {
-		let dataToUpdate = {};
-		if (!password || password === "") {
-			dataToUpdate = { email, name };
-		} else {
-			dataToUpdate = { email, name, password };
-		}
 		dispatch(USER_UPDATE_PROFILE_REQUEST());
 		const { headers, data } = await http.put("/user", dataToUpdate);
 		dispatch(USER_UPDATE_PROFILE_SUCCESS(data.data));
@@ -88,7 +82,7 @@ const initialState = {
 	error: null,
 };
 
-export function userReducer(state = initialState, action) {
+export default function userReducer(state = initialState, action) {
 	switch (action.type) {
 		case USER_SIGNUP_REQUEST.type:
 			return { ...state, loading: true, error: null };

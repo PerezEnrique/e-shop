@@ -6,6 +6,7 @@ const PRODUCT_FETCHING_START = createAction("PRODUCT_FETCHING_START");
 const ADD_ITEM_TO_CART = createAction("ADD_ITEM_TO_CART");
 const PRODUCT_FETCHING_FAILS = createAction("PRODUCT_FETCHING_FAILS");
 const REMOVE_ITEM_FROM_CART = createAction("REMOVE_ITEM_FROM_CART");
+const SET_PRICES = createAction("SET_PRICES");
 const SAVE_SHIPPING_DATA = createAction("SAVE_SHIPPING_DATA");
 const SAVE_PAYMENT_METHOD = createAction("SAVE_PAYMENT_METHOD");
 
@@ -45,9 +46,34 @@ export const savePaymentMethod = data => dispatch => {
 	localStorage.setItem("paymentMethod", JSON.stringify(data));
 };
 
+export const setPrices = () => (dispatch, getState) => {
+	const cartItems = [...getState().cart.cartItems];
+	const prices = {};
+
+	prices.itemsPrice = cartItems
+		.reduce((acc, item) => acc + Number(item.quantity) * Number(item.price), 0)
+		.toFixed(2);
+
+	prices.shippingPrice = (Number(prices.itemsPrice) > 100 ? 0 : 10).toFixed(2);
+
+	prices.taxPrice = (Number(prices.itemsPrice) * 0.16).toFixed(2);
+
+	prices.totalPrice = (
+		Number(prices.itemsPrice) +
+		Number(prices.shippingPrice) +
+		Number(prices.taxPrice)
+	).toFixed(2);
+
+	dispatch(SET_PRICES(prices));
+};
+
 //REDUCER
 const initialState = {
 	cartItems: localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],
+	itemsPrice: null,
+	shippingPrice: null,
+	taxPrice: null,
+	totalPrice: null,
 	shippingData: localStorage.getItem("shippingData")
 		? JSON.parse(localStorage.getItem("shippingData"))
 		: {},
@@ -86,6 +112,9 @@ export default function cartReducer(state = initialState, action) {
 				...state,
 				cartItems: state.cartItems.filter(item => item._id !== action.payload),
 			};
+		case SET_PRICES.type:
+			const { itemsPrice, shippingPrice, taxPrice, totalPrice } = action.payload;
+			return { ...state, itemsPrice, shippingPrice, taxPrice, totalPrice };
 		case SAVE_SHIPPING_DATA.type:
 			return {
 				...state,

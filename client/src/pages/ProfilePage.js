@@ -33,7 +33,13 @@ function ProfilePage() {
 			setValidationErrors(errorsFromValidation);
 		} else {
 			const { email, name, password } = userData;
-			dispatch(updateProfile(email, name, password));
+			let dataToUpdate = {};
+			if (!password || password === "") {
+				dataToUpdate = { email, name };
+			} else {
+				dataToUpdate = { email, name, password };
+			}
+			dispatch(updateProfile(dataToUpdate));
 			// To clean the fields after submition
 			const data = userData;
 			data.password = "";

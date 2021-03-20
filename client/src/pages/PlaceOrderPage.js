@@ -1,26 +1,50 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setPrices } from "../state_management/cartState";
+import { createOrder } from "../state_management/orderState";
 import CheckoutSteps from "../components/CheckoutSteps";
 import ProductListItem from "../components/ProductListItem";
+import Alert from "../components/Alert";
 
-function PlaceOrderPage() {
-	const cart = useSelector(state => state.cart);
-	const { cartItems, shippingData, paymentMethod } = cart;
+function PlaceOrderPage({ history }) {
+	const {
+		cartItems,
+		itemsPrice,
+		shippingPrice,
+		taxPrice,
+		totalPrice,
+		shippingData,
+		paymentMethod,
+	} = useSelector(state => state.cart);
+	const { currentOrder, successfulOrderCreation, error } = useSelector(
+		state => state.order
+	);
 	const { address, city, postalCode, country } = shippingData;
+	const dispatch = useDispatch();
 
-	cart.itemsPrice = cartItems
-		.reduce((acc, item) => acc + Number(item.quantity) * Number(item.price), 0)
-		.toFixed(2);
+	// useEffect(() => {
+	// 	if (successfulOrderCreation) {
+	// 		history.push(`order/${currentOrder._id}`);
+	// 	}
+	// }, [successfulOrderCreation, history, currentOrder._id]);
 
-	cart.shippingPrice = (Number(cartItems.itemsPrice) > 100 ? 0 : 10).toFixed(2);
-	cart.taxPrice = (Number(cart.itemsPrice) * 0.16).toFixed(2);
-	cart.totalPrice = (
-		Number(cart.itemsPrice) +
-		Number(cart.shippingPrice) +
-		Number(cart.taxPrice)
-	).toFixed(2);
+	useEffect(() => {
+		dispatch(setPrices());
+	}, [dispatch]);
 
-	const placeOrderHandler = () => console.log("ok");
+	const placeOrderHandler = () => {
+		dispatch(
+			createOrder({
+				orderItems: cartItems,
+				shippingData,
+				paymentMethod,
+				itemsPrice,
+				shippingPrice,
+				taxPrice,
+				totalPrice,
+			})
+		);
+	};
 
 	return (
 		<div>
@@ -54,27 +78,27 @@ function PlaceOrderPage() {
 							<dl>
 								<div className="d-flex justify-content-between">
 									<dt>Items</dt>
-									<dd>${cart.itemsPrice}</dd>
+									<dd>${itemsPrice}</dd>
 								</div>
 
 								<hr />
 								<div className="d-flex justify-content-between">
 									<dt>Shipping</dt>
-									<dd>${cart.shippingPrice}</dd>
+									<dd>${shippingPrice}</dd>
 								</div>
 								<hr />
 								<div className="d-flex justify-content-between">
 									<dt>Tax</dt>
-									<dd>${cart.taxPrice}</dd>
+									<dd>${taxPrice}</dd>
 								</div>
 								<hr />
 								<div className="d-flex justify-content-between">
 									<dt>Total</dt>
-									<dd className="font-weight-bold">${cart.totalPrice}</dd>
+									<dd className="font-weight-bold">${totalPrice}</dd>
 								</div>
 							</dl>
 							<hr />
-
+							{error && <Alert type="danger" message={error} />}
 							<button
 								className="btn btn-block btn-primary"
 								disabled={cartItems.length < 1}
