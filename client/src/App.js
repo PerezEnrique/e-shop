@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ShippingPage from "./pages/ShippingPage";
 import PaymentPage from "./pages/PaymentPage";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
+import OrderPage from "./pages/OrderPage";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
 				<Route path="/shipping" component={ShippingPage} />
 				<Route path="/placeorder" component={PlaceOrderPage} />
 				<Route path="/payment" component={PaymentPage} />
+				<Route path="/order/:id" component={OrderPage} />
 				<Route path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />
 				<Route path="/log-in" component={LogInPage} />

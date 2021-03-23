@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { savePaymentMethod } from "../state_management/cartState";
 import CheckoutSteps from "../components/CheckoutSteps";
-import Spinner from "../components/Spinner";
 
 function PaymentPage({ history }) {
 	const { shippingData } = useSelector(state => state.cart);
@@ -24,7 +23,6 @@ function PaymentPage({ history }) {
 		<main className="container" role="main">
 			<CheckoutSteps step1 step2 step3 />
 			<h1>Payment method</h1>
-			{/* {loading && <Spinner />} */}
 			<section>
 				<form className="mt-3" onSubmit={handleSubmit}>
 					<div className="form-group">
@@ -43,9 +41,7 @@ function PaymentPage({ history }) {
 							</label>
 						</div>
 					</div>
-					{/* {error && <div className="alert alert-danger">{error}</div>} */}
 					<div>
-						{/* <button className="mb-2 btn btn-primary" type="submit" disabled={loading}> */}
 						<button className="mb-2 btn btn-primary" type="submit">
 							Continue
 						</button>

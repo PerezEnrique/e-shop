@@ -1,4 +1,3 @@
-const { json } = require("express");
 const Order = require("../models/Order");
 
 // route: POST /order
@@ -32,4 +31,20 @@ async function createOrder(req, res) {
 	return res.status(201).json({ success: true, data: createdOrder });
 }
 
-module.exports = { createOrder };
+// route: GET /order
+//access: private
+//desc: returns the desired order
+async function getOrder(req, res) {
+	const order = await Order.findById(req.params.id).populate("user", ["email", "name"]);
+
+	if (!order) {
+		return res.status(404).json({
+			success: false,
+			errorMessage: "Couldn't find order with the provided id",
+		});
+	}
+
+	return res.status(200).json({ success: true, data: order });
+}
+
+module.exports = { createOrder, getOrder };

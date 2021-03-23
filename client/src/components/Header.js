@@ -6,10 +6,7 @@ import { FaShoppingCart, FaUser } from "react-icons/fa";
 
 function Header() {
 	const { currentUser } = useSelector(state => state.user);
-
-	const cartCount = localStorage.getItem("cart")
-		? JSON.parse(localStorage.getItem("cart")).length
-		: null;
+	const { cartItems } = useSelector(state => state.cart);
 
 	return (
 		<header
@@ -36,7 +33,8 @@ function Header() {
 						<ul className="navbar-nav ml-auto">
 							<li className="nav-item">
 								<Link className="nav-link" to="/cart">
-									<FaShoppingCart /> Cart {cartCount && `(${cartCount})`}
+									<FaShoppingCart /> Cart{" "}
+									{cartItems.length > 0 && `(${cartItems.length})`}
 								</Link>
 							</li>
 							{!currentUser ? (

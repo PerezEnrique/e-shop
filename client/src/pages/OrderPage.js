@@ -1,0 +1,105 @@
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getOrder } from "../state_management/orderState";
+import ProductListItem from "../components/ProductListItem";
+import Spinner from "../components/Spinner";
+import Alert from "../components/Alert";
+
+function OrderPage({ match }) {
+	const dispatch = useDispatch();
+	const { currentOrder, loading, error } = useSelector(state => state.order);
+	const {
+		_id,
+		user: { name, email },
+		orderItems,
+		shippingData: { address, city, postalCode, country },
+		paymentMethod,
+		itemsPrice,
+		taxPrice,
+		shippingPrice,
+		totalPrice,
+		isPaid,
+		isDelivered,
+	} = currentOrder;
+
+	useEffect(() => {
+		dispatch(getOrder(match.params.id));
+	}, [dispatch, match.params.id]);
+
+	return (
+		<div>
+			<main className="container" role="main">
+				<h1 className="h2">Order {_id}</h1>
+				{loading ? (
+					<Spinner />
+				) : error ? (
+					<Alert type="danger" message={error} />
+				) : (
+					<div className="row justify-content-between align-items-start">
+						<section className="mt-3 col-md-8">
+							<div className="border-bottom mb-3">
+								<h2 className="h3 mb-3">Shipping</h2>
+								<p>Name: {name}</p>
+								<p>Email: {email}</p>
+								<p>
+									Address: {address}, {city} {postalCode}, {country}
+								</p>
+								<p>Status: {!isDelivered ? "Not delivered" : "Delivered"}</p>
+							</div>
+							<div className="border-bottom mb-3">
+								<h2 className="h3 mb-3">Payment method</h2>
+								<p>Method: {paymentMethod}</p>
+								<p>
+									Payment status:{" "}
+									{!isPaid ? (
+										<span className="text-danger">Not paid</span>
+									) : (
+										<span className="text-success">"Paid"</span>
+									)}
+								</p>
+							</div>
+							<div>
+								<h2 className="h3 mb-3">Order items</h2>
+								<ul className="list-group list-group-flush list-unstyled">
+									{orderItems.map(item => (
+										<ProductListItem key={item._id} item={item} />
+									))}
+								</ul>
+							</div>
+						</section>
+						<section className="col-md-3 card">
+							<div className="card-body">
+								<h1 className="card-title h3">Order summary</h1>
+								<hr />
+								<dl>
+									<div className="d-flex justify-content-between">
+										<dt>Items</dt>
+										<dd>${itemsPrice}</dd>
+									</div>
+
+									<hr />
+									<div className="d-flex justify-content-between">
+										<dt>Shipping</dt>
+										<dd>${shippingPrice}</dd>
+									</div>
+									<hr />
+									<div className="d-flex justify-content-between">
+										<dt>Tax</dt>
+										<dd>${taxPrice}</dd>
+									</div>
+									<hr />
+									<div className="d-flex justify-content-between">
+										<dt>Total</dt>
+										<dd className="font-weight-bold">${totalPrice}</dd>
+									</div>
+								</dl>
+							</div>
+						</section>
+					</div>
+				)}
+			</main>
+		</div>
+	);
+}
+
+export default OrderPage;

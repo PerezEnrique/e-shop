@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { saveShippingData } from "../state_management/cartState";
 import CheckoutSteps from "../components/CheckoutSteps";
-import Spinner from "../components/Spinner";
 import { validateShippingData } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
 
@@ -41,7 +40,6 @@ function ShippingPage({ history }) {
 		<main className="container text-center" role="main">
 			<CheckoutSteps step1 step2 />
 			<h1>Shipping</h1>
-			{/* {loading && <Spinner />} */}
 			<section className="row justify-content-center">
 				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
@@ -110,9 +108,7 @@ function ShippingPage({ history }) {
 									<div className="alert alert-danger">{validationErrors.country}</div>
 								)}
 							</div>
-							{/* {error && <div className="alert alert-danger">{error}</div>} */}
 							<div className="text-center">
-								{/* <button className="mb-2 btn btn-primary" type="submit" disabled={loading}> */}
 								<button className="mb-2 btn btn-primary" type="submit">
 									Continue
 								</button>

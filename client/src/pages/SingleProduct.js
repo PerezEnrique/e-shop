@@ -8,7 +8,21 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function SingleProduct({ match, history }) {
-	const { singleProduct, loading, error } = useSelector(state => state.products);
+	const {
+		singleProduct: {
+			name,
+			brand,
+			image,
+			price,
+			rating,
+			numReviews,
+			description,
+			countInStock,
+		},
+		loading,
+		error,
+	} = useSelector(state => state.products);
+
 	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
 
@@ -20,16 +34,6 @@ function SingleProduct({ match, history }) {
 		history.push(`/cart?productId=${match.params.id}&quantity=${quantity}`);
 	};
 
-	const {
-		name,
-		brand,
-		image,
-		price,
-		rating,
-		numReviews,
-		description,
-		countInStock,
-	} = singleProduct;
 	return (
 		<main className="container" role="main">
 			<Link to="/">Go back</Link>

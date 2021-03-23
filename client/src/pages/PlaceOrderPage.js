@@ -22,11 +22,11 @@ function PlaceOrderPage({ history }) {
 	const { address, city, postalCode, country } = shippingData;
 	const dispatch = useDispatch();
 
-	// useEffect(() => {
-	// 	if (successfulOrderCreation) {
-	// 		history.push(`order/${currentOrder._id}`);
-	// 	}
-	// }, [successfulOrderCreation, history, currentOrder._id]);
+	useEffect(() => {
+		if (successfulOrderCreation) {
+			history.push(`order/${currentOrder._id}`);
+		}
+	}, [successfulOrderCreation, history, currentOrder._id]);
 
 	useEffect(() => {
 		dispatch(setPrices());
@@ -64,11 +64,15 @@ function PlaceOrderPage({ history }) {
 						</div>
 						<div>
 							<h2 className="h3 mb-3">Order items</h2>
-							<ul className="list-group list-group-flush list-unstyled">
-								{cartItems.map(item => (
-									<ProductListItem key={item._id} item={item} />
-								))}
-							</ul>
+							{cartItems.length < 1 ? (
+								<Alert type="info" message="Your cart is empty" />
+							) : (
+								<ul className="list-group list-group-flush list-unstyled">
+									{cartItems.map(item => (
+										<ProductListItem key={item._id} item={item} />
+									))}
+								</ul>
+							)}
 						</div>
 					</section>
 					<section className="col-md-3 card">
