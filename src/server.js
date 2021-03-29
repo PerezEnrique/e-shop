@@ -19,6 +19,7 @@ app.use(express.json());
 app.use("/user", userRoutes);
 app.use("/products", productsRoutes);
 app.use("/orders", ordersRoutes);
+app.use("/config/paypal", (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));
 app.use(errorHandler);
 
 app.listen(port, () =>

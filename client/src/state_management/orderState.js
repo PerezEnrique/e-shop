@@ -7,6 +7,10 @@ const CREATE_ORDER_FAILS = createAction("CREATE_ORDER_FAILS");
 const ORDER_FETCHING_REQUEST = createAction("ORDER_FETCHING_REQUEST");
 const ORDER_FETCHING_SUCCESS = createAction("ORDER_FETCHING_SUCCESS");
 const ORDER_FETCHING_FAILS = createAction("ORDER_FETCHING_FAILS");
+const ORDER_PAY_REQUEST = createAction("ORDER_PAY_REQUEST");
+const ORDER_PAY_SUCCESS = createAction("ORDER_PAY_SUCCESS");
+const ORDER_PAY_FAILS = createAction("ORDER_PAY_FAILS");
+const ORDER_PAY_RESET = createAction("ORDER_PAY_RESET");
 
 export const createOrder = order => async dispatch => {
 	try {
@@ -40,6 +44,26 @@ export const getOrder = orderId => async dispatch => {
 	}
 };
 
+export const payOrder = (orderId, paymentResult) => async dispatch => {
+	try {
+		dispatch(ORDER_PAY_REQUEST());
+		const { data } = await http.put(`/orders/${orderId}/pay`, paymentResult);
+		dispatch(ORDER_PAY_SUCCESS(data.data));
+	} catch (ex) {
+		dispatch(
+			ORDER_PAY_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
+export const resetPaymentStatus = () => dispatch => {
+	dispatch(ORDER_PAY_RESET());
+};
+
 const initialState = {
 	currentOrder: {
 		user: {},
@@ -47,6 +71,7 @@ const initialState = {
 		shippingData: {}, //Estos segundos pisos deben estar definidos, sin importar que vacios, ya que operaremos o destructuraremos sobre ellos en el montado
 	},
 	successfulOrderCreation: false,
+	succesfulOrderPayment: false,
 	loading: false,
 	error: null,
 };
@@ -54,17 +79,35 @@ const initialState = {
 export default function orderReducer(state = initialState, action) {
 	switch (action.type) {
 		case CREATE_ORDER_REQUEST.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case CREATE_ORDER_SUCCESS.type:
-			return { ...state, currentOrder: action.payload, loading: false };
+			return {
+				...state,
+				currentOrder: action.payload,
+				loading: false,
+				successfulOrderCreation: true,
+			};
 		case CREATE_ORDER_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case ORDER_FETCHING_REQUEST.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case ORDER_FETCHING_SUCCESS.type:
 			return { ...state, currentOrder: action.payload, loading: false };
 		case ORDER_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
+		case ORDER_PAY_REQUEST.type:
+			return { ...state, loading: true };
+		case ORDER_PAY_SUCCESS.type:
+			return {
+				...state,
+				currentOrder: action.payload,
+				loading: false,
+				successfulOrderPayment: true,
+			};
+		case ORDER_PAY_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case ORDER_PAY_RESET.type:
+			return { ...state, successfulOrderPayment: false };
 		default:
 			return state;
 	}

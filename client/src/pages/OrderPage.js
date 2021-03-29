@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getOrder } from "../state_management/orderState";
+import { PayPalButton } from "react-paypal-button-v2";
+import http from "../services/httpServices";
+import { getOrder, payOrder, resetPaymentStatus } from "../state_management/orderState";
 import ProductListItem from "../components/ProductListItem";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function OrderPage({ match }) {
-	const dispatch = useDispatch();
-	const { currentOrder, loading, error } = useSelector(state => state.order);
+	const { currentOrder, loading, successfulOrderPayment, error } = useSelector(
+		state => state.order
+	);
 	const {
 		_id,
 		user: { name, email },
@@ -19,12 +22,43 @@ function OrderPage({ match }) {
 		shippingPrice,
 		totalPrice,
 		isPaid,
+		paidAt,
 		isDelivered,
 	} = currentOrder;
+	const [sdkReady, setSDKReady] = useState(false);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getOrder(match.params.id));
-	}, [dispatch, match.params.id]);
+		const addPaypalScript = async () => {
+			const { data: clientId } = await http.get("/config/paypal");
+			const script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+			script.async = true;
+			script.onload = () => {
+				setSDKReady(true);
+			};
+
+			document.body.appendChild(script);
+		};
+
+		if (currentOrder.orderItems.length < 1 || successfulOrderPayment) {
+			dispatch(resetPaymentStatus);
+			dispatch(getOrder(match.params.id));
+		} else if (!currentOrder.isPaid) {
+			if (!window.paypal) {
+				addPaypalScript();
+			} else {
+				setSDKReady(true);
+			}
+		}
+	}, [dispatch, match.params.id, currentOrder, successfulOrderPayment]);
+
+	const successPaymentHandler = paymentResult => {
+		console.log("pay handler");
+		dispatch(payOrder(match.params.id, paymentResult));
+	};
 
 	return (
 		<div>
@@ -54,7 +88,7 @@ function OrderPage({ match }) {
 									{!isPaid ? (
 										<span className="text-danger">Not paid</span>
 									) : (
-										<span className="text-success">"Paid"</span>
+										<span className="text-success">Paid on {paidAt}</span>
 									)}
 								</p>
 							</div>
@@ -93,6 +127,21 @@ function OrderPage({ match }) {
 										<dd className="font-weight-bold">${totalPrice}</dd>
 									</div>
 								</dl>
+								{!currentOrder.isPaid && (
+									<React.Fragment>
+										<hr />
+										{loading ? (
+											<Spinner />
+										) : !sdkReady ? (
+											<Spinner />
+										) : (
+											<PayPalButton
+												amount={currentOrder.totalPrice}
+												onSuccess={successPaymentHandler}
+											/>
+										)}
+									</React.Fragment>
+								)}
 							</div>
 						</section>
 					</div>

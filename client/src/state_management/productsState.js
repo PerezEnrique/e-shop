@@ -52,13 +52,13 @@ const initialState = {
 export default function productReducer(state = initialState, action) {
 	switch (action.type) {
 		case PRODUCTS_FETCHING_START.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case PRODUCTS_FETCHING_SUCCESS.type:
 			return { ...state, products: action.payload, loading: false };
 		case PRODUCTS_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case SINGLE_PRODUCT_FETCHING_START.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case SINGLE_PRODUCT_FETCHING_SUCCESS.type:
 			return { ...state, singleProduct: action.payload, loading: false };
 		case SINGLE_PRODUCT_FETCHING_FAILS.type:

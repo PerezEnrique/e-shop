@@ -1,6 +1,6 @@
 const Order = require("../models/Order");
 
-// route: POST /order
+// route: POST /orders
 //access: private
 //desc: creates a new order
 async function createOrder(req, res) {
@@ -31,7 +31,7 @@ async function createOrder(req, res) {
 	return res.status(201).json({ success: true, data: createdOrder });
 }
 
-// route: GET /order
+// route: GET /orders
 //access: private
 //desc: returns the desired order
 async function getOrder(req, res) {
@@ -47,4 +47,29 @@ async function getOrder(req, res) {
 	return res.status(200).json({ success: true, data: order });
 }
 
-module.exports = { createOrder, getOrder };
+// route: PUT /orders/:id/pay
+//access: private
+//desc: update order to paid
+async function updateOrderToPaid(req, res) {
+	const order = await Order.findById(req.params.id);
+
+	if (!order) {
+		return res.status(404).json({
+			success: false,
+			errorMessage: "Couldn't find order with the provided id",
+		});
+	}
+
+	(order.isPaid = true), (order.paidAt = Date.now());
+	order.paymentResult = {
+		id: req.body.id,
+		status: req.body.status,
+		update_time: req.body.update_time,
+		email_address: req.body.payer.email_address,
+	};
+
+	const updatedOrder = await order.save();
+	return res.status(201).json({ success: true, data: updatedOrder });
+}
+
+module.exports = { createOrder, getOrder, updateOrderToPaid };

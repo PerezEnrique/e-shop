@@ -85,7 +85,7 @@ const initialState = {
 export default function cartReducer(state = initialState, action) {
 	switch (action.type) {
 		case PRODUCT_FETCHING_START.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case ADD_ITEM_TO_CART.type:
 			const newItem = action.payload;
 			const sameItemAlreadyOnCart = state.cartItems.find(
