@@ -51,6 +51,7 @@ function CartPage({ location, history }) {
 									<th className="col-md-2" id="quantity">
 										Quantity
 									</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>

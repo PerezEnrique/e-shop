@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfile } from "../state_management/userState";
+import { getUserOrders } from "../state_management/orderState";
+import OrderRow from "../components/OrderRow";
 import { objectIsEmpty } from "../utils/helpers";
 import { validateDataToUpdate } from "../utils/validation";
 import Spinner from "../components/Spinner";
+import Alert from "../components/Alert";
 
 function ProfilePage() {
 	const { currentUser, loading, error, successfulUpdate } = useSelector(
 		state => state.user
 	);
-	const dispatch = useDispatch();
+	const { userOrders, loading: loadingOrders, error: ordersError } = useSelector(
+		state => state.order
+	);
 	const [userData, setUserData] = useState({
 		email: currentUser.email,
 		name: currentUser.name,
@@ -17,6 +22,11 @@ function ProfilePage() {
 		confirmPassword: "",
 	});
 	const [validationErrors, setValidationErrors] = useState({});
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getUserOrders());
+	}, [dispatch]);
 
 	const handleChange = e => {
 		setValidationErrors({});
@@ -50,10 +60,10 @@ function ProfilePage() {
 
 	return (
 		<main className="container" role="main">
-			<h1>Update profile</h1>
+			<h1>Profile</h1>
 			{loading && <Spinner />}
-			<section className="row">
-				<div className="card col-md-3 mt-4">
+			<div className="row justify-content-between">
+				<section className="card col-md-3 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
 							<div className="form-group">
@@ -133,8 +143,32 @@ function ProfilePage() {
 							</div>
 						</form>
 					</div>
-				</div>
-			</section>
+				</section>
+				<section className="col-md-8 mt-4">
+					<h2>My orders</h2>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th id="id">Id</th>
+								<th id="date">Date</th>
+								<th id="total">Total</th>
+								<th id="payment-status">Paid</th>
+								<th id="delivery-status">Delivered</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{loadingOrders ? (
+								<Spinner />
+							) : ordersError ? (
+								<Alert type="danger" message={ordersError} />
+							) : (
+								userOrders.map(order => <OrderRow key={order._id} order={order} />)
+							)}
+						</tbody>
+					</table>
+				</section>
+			</div>
 		</main>
 	);
 }

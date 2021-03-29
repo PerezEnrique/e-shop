@@ -7,6 +7,9 @@ const CREATE_ORDER_FAILS = createAction("CREATE_ORDER_FAILS");
 const ORDER_FETCHING_REQUEST = createAction("ORDER_FETCHING_REQUEST");
 const ORDER_FETCHING_SUCCESS = createAction("ORDER_FETCHING_SUCCESS");
 const ORDER_FETCHING_FAILS = createAction("ORDER_FETCHING_FAILS");
+const USER_ORDERS_FETCHING_REQUEST = createAction("USER_ORDERS_FETCHING_REQUEST");
+const USER_ORDERS_FETCHING_SUCCESS = createAction("USER_ORDERS_FETCHING_SUCCESS");
+const USER_ORDERS_FETCHING_FAILS = createAction("USER_ORDERS_FETCHING_FAILS");
 const ORDER_PAY_REQUEST = createAction("ORDER_PAY_REQUEST");
 const ORDER_PAY_SUCCESS = createAction("ORDER_PAY_SUCCESS");
 const ORDER_PAY_FAILS = createAction("ORDER_PAY_FAILS");
@@ -15,8 +18,10 @@ const ORDER_PAY_RESET = createAction("ORDER_PAY_RESET");
 export const createOrder = order => async dispatch => {
 	try {
 		dispatch(CREATE_ORDER_REQUEST());
-		const { data } = await http.post("/orders", order);
-		dispatch(CREATE_ORDER_SUCCESS(data.data));
+		const {
+			data: { data },
+		} = await http.post("/orders", order);
+		dispatch(CREATE_ORDER_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
 			CREATE_ORDER_FAILS(
@@ -31,8 +36,10 @@ export const createOrder = order => async dispatch => {
 export const getOrder = orderId => async dispatch => {
 	try {
 		dispatch(ORDER_FETCHING_REQUEST());
-		const { data } = await http.get(`/orders/${orderId}`);
-		dispatch(ORDER_FETCHING_SUCCESS(data.data));
+		const {
+			data: { data },
+		} = await http.get(`/orders/${orderId}`);
+		dispatch(ORDER_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
 			ORDER_FETCHING_FAILS(
@@ -44,11 +51,31 @@ export const getOrder = orderId => async dispatch => {
 	}
 };
 
+export const getUserOrders = () => async dispatch => {
+	try {
+		dispatch(USER_ORDERS_FETCHING_REQUEST());
+		const {
+			data: { data },
+		} = await http.get("/orders/my-orders");
+		dispatch(USER_ORDERS_FETCHING_SUCCESS(data));
+	} catch (ex) {
+		dispatch(
+			USER_ORDERS_FETCHING_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
 export const payOrder = (orderId, paymentResult) => async dispatch => {
 	try {
 		dispatch(ORDER_PAY_REQUEST());
-		const { data } = await http.put(`/orders/${orderId}/pay`, paymentResult);
-		dispatch(ORDER_PAY_SUCCESS(data.data));
+		const {
+			data: { data },
+		} = await http.put(`/orders/${orderId}/pay`, paymentResult);
+		dispatch(ORDER_PAY_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
 			ORDER_PAY_FAILS(
@@ -72,6 +99,7 @@ const initialState = {
 	},
 	successfulOrderCreation: false,
 	succesfulOrderPayment: false,
+	userOrders: [],
 	loading: false,
 	error: null,
 };
@@ -94,6 +122,12 @@ export default function orderReducer(state = initialState, action) {
 		case ORDER_FETCHING_SUCCESS.type:
 			return { ...state, currentOrder: action.payload, loading: false };
 		case ORDER_FETCHING_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case USER_ORDERS_FETCHING_REQUEST.type:
+			return { ...state, loading: true, error: null };
+		case USER_ORDERS_FETCHING_SUCCESS.type:
+			return { ...state, userOrders: action.payload, loading: false };
+		case USER_ORDERS_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case ORDER_PAY_REQUEST.type:
 			return { ...state, loading: true };

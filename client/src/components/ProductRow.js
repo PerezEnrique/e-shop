@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { addItem, removeItem } from "../state_management/cartState";
 import { getStockOptions } from "../utils/helpers";
 
-function ProductRow({ item }) {
-	const { _id, name, image, brand, price, countInStock, quantity } = item;
+function ProductRow({
+	item: { _id, name, image, brand, price, countInStock, quantity },
+}) {
 	const dispatch = useDispatch();
 
 	return (

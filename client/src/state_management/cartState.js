@@ -13,9 +13,11 @@ const SAVE_PAYMENT_METHOD = createAction("SAVE_PAYMENT_METHOD");
 export const addItem = (productId, quantity) => async (dispatch, getState) => {
 	try {
 		dispatch(PRODUCT_FETCHING_START());
-		const { data } = await http.get(`/products/${productId}`);
+		const {
+			data: { data },
+		} = await http.get(`/products/${productId}`);
 		const item = {
-			...data.data,
+			...data,
 			quantity: Number(quantity),
 		};
 		dispatch(ADD_ITEM_TO_CART(item));

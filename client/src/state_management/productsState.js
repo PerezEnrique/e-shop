@@ -12,8 +12,10 @@ const SINGLE_PRODUCT_FETCHING_FAILS = createAction("SINGLE_PRODUCT_FETCHING_FAIL
 export const fetchProducts = () => async dispatch => {
 	try {
 		dispatch(PRODUCTS_FETCHING_START());
-		const { data } = await http.get("/products");
-		dispatch(PRODUCTS_FETCHING_SUCCESS(data.data));
+		const {
+			data: { data },
+		} = await http.get("/products");
+		dispatch(PRODUCTS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
 			PRODUCTS_FETCHING_FAILS(
@@ -28,8 +30,10 @@ export const fetchProducts = () => async dispatch => {
 export const fetchSingleProduct = productId => async dispatch => {
 	try {
 		dispatch(SINGLE_PRODUCT_FETCHING_START());
-		const { data } = await http.get(`/products/${productId}`);
-		dispatch(SINGLE_PRODUCT_FETCHING_SUCCESS(data.data));
+		const {
+			data: { data },
+		} = await http.get(`/products/${productId}`);
+		dispatch(SINGLE_PRODUCT_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
 			SINGLE_PRODUCT_FETCHING_FAILS(

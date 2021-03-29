@@ -19,8 +19,11 @@ http.setAuthToken(localStorage.getItem("authToken")); //If no token the property
 export const signUp = (email, name, password) => async dispatch => {
 	try {
 		dispatch(USER_SIGNUP_REQUEST());
-		const { headers, data } = await http.post("/user/sign-up", { email, name, password });
-		dispatch(USER_SIGNUP_SUCCESS(data.data));
+		const {
+			headers,
+			data: { data },
+		} = await http.post("/user/sign-up", { email, name, password });
+		dispatch(USER_SIGNUP_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 	} catch (ex) {
 		dispatch(
@@ -36,8 +39,11 @@ export const signUp = (email, name, password) => async dispatch => {
 export const logIn = (email, password) => async dispatch => {
 	try {
 		dispatch(USER_LOGIN_REQUEST());
-		const { headers, data } = await http.post("/user/log-in", { email, password });
-		dispatch(USER_LOGIN_SUCCESS(data.data));
+		const {
+			headers,
+			data: { data },
+		} = await http.post("/user/log-in", { email, password });
+		dispatch(USER_LOGIN_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 	} catch (ex) {
 		dispatch(
@@ -59,8 +65,11 @@ export const logOut = () => dispatch => {
 export const updateProfile = dataToUpdate => async dispatch => {
 	try {
 		dispatch(USER_UPDATE_PROFILE_REQUEST());
-		const { headers, data } = await http.put("/user", dataToUpdate);
-		dispatch(USER_UPDATE_PROFILE_SUCCESS(data.data));
+		const {
+			headers,
+			data: { data },
+		} = await http.put("/user", dataToUpdate);
+		dispatch(USER_UPDATE_PROFILE_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 	} catch (ex) {
 		dispatch(

@@ -47,6 +47,15 @@ async function getOrder(req, res) {
 	return res.status(200).json({ success: true, data: order });
 }
 
+// route: GET /orders/my-orders
+//access: private
+//desc: get current user's orders
+async function getUserOrders(req, res) {
+	const orders = await Order.find({ user: req.user._id });
+
+	return res.status(200).json({ success: true, data: orders });
+}
+
 // route: PUT /orders/:id/pay
 //access: private
 //desc: update order to paid
@@ -72,4 +81,4 @@ async function updateOrderToPaid(req, res) {
 	return res.status(201).json({ success: true, data: updatedOrder });
 }
 
-module.exports = { createOrder, getOrder, updateOrderToPaid };
+module.exports = { createOrder, getOrder, getUserOrders, updateOrderToPaid };
