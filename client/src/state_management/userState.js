@@ -25,6 +25,7 @@ export const signUp = (email, name, password) => async dispatch => {
 		} = await http.post("/user/sign-up", { email, name, password });
 		dispatch(USER_SIGNUP_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
+		http.setAuthToken(localStorage.getItem("authToken"));
 	} catch (ex) {
 		dispatch(
 			USER_SIGNUP_FAILS(
@@ -45,6 +46,7 @@ export const logIn = (email, password) => async dispatch => {
 		} = await http.post("/user/log-in", { email, password });
 		dispatch(USER_LOGIN_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
+		http.setAuthToken(localStorage.getItem("authToken"));
 	} catch (ex) {
 		dispatch(
 			USER_LOGIN_FAILS(
@@ -58,8 +60,10 @@ export const logIn = (email, password) => async dispatch => {
 
 export const logOut = () => dispatch => {
 	localStorage.removeItem("authToken");
+	localStorage.removeItem("shippingData");
+	localStorage.removeItem("paymentMethod");
 	dispatch(USER_LOGOUT());
-	window.location = "/";
+	window.location = "/"; //This will refresh the pay and delete the data stored in memory
 };
 
 export const updateProfile = dataToUpdate => async dispatch => {
@@ -71,6 +75,7 @@ export const updateProfile = dataToUpdate => async dispatch => {
 		} = await http.put("/user", dataToUpdate);
 		dispatch(USER_UPDATE_PROFILE_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
+		http.setAuthToken(localStorage.getItem("authToken"));
 	} catch (ex) {
 		dispatch(
 			USER_UPDATE_PROFILE_FAILS(
