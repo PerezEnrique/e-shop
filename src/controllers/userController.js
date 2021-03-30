@@ -66,20 +66,6 @@ async function authenticateUser(req, res) {
 		.json({ success: true, data: dataForClient });
 }
 
-//route: GET /user
-//access: private
-//desc: returns user profile
-// async function getUserProfile(req, res) {
-// 	const user = await User.findById(req.user._id).select("-password");
-// 	if (!user)
-// 		return res
-// 			.status(404)
-// 			.json({ success: false, errorMessage: "Couldn't find user with the provided id" });
-
-// 	const dataForClient = prepareDataForClient(user);
-// 	return res.status(200).json({ success: true, data: dataForClient });
-// }
-
 //route: PUT /user
 //access: private
 //desc: update user's profile
@@ -113,4 +99,11 @@ async function updateUserProfile(req, res) {
 		.json({ success: true, data: dataForClient });
 }
 
-module.exports = { createUser, authenticateUser, updateUserProfile };
+//route: GET /user/admin/get-users
+//access: private (and only for admins)
+//desc: returns all user
+async function getAllUsers(req, res) {
+	const users = User.find({}).select("-password");
+	return res.status(200).json({ success: true, data: users });
+}
+module.exports = { createUser, authenticateUser, updateUserProfile, getAllUsers };
