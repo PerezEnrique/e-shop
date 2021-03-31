@@ -13,6 +13,9 @@ const USER_LOGOUT = createAction("USER_LOGOUT");
 const USER_UPDATE_PROFILE_REQUEST = createAction("USER_UPDATE_PROFILE_REQUEST");
 const USER_UPDATE_PROFILE_SUCCESS = createAction("USER_UPDATE_PROFILE_SUCCESS");
 const USER_UPDATE_PROFILE_FAILS = createAction("USER_UPDATE_PROFILE_FAILS");
+const LIST_USER_REQUEST = createAction("LIST_USER_REQUEST");
+const LIST_USER_SUCCESS = createAction("LIST_USER_SUCCESS");
+const LIST_USER_FAILS = createAction("LIST_USER_FAILS");
 
 http.setAuthToken(localStorage.getItem("authToken")); //If no token the property simply will be undefinned
 
@@ -87,12 +90,32 @@ export const updateProfile = dataToUpdate => async dispatch => {
 	}
 };
 
+export const getUserList = () => async dispatch => {
+	try {
+		dispatch(LIST_USER_REQUEST());
+		const {
+			data: { data },
+		} = await http.get("/user/admin/get-users");
+		dispatch(LIST_USER_SUCCESS(data));
+	} catch (ex) {
+		dispatch(
+			LIST_USER_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
 const initialState = {
 	currentUser: localStorage.getItem("authToken")
 		? decodeToken(localStorage.getItem("authToken"))
 		: null,
 	loading: false,
 	successfulUpdate: false,
+	userList: [],
+	userListSuccessfullyLoaded: false,
 	error: null,
 };
 
@@ -123,6 +146,12 @@ export default function userReducer(state = initialState, action) {
 			};
 		case USER_UPDATE_PROFILE_FAILS.type:
 			return { ...state, loading: false, successfulUpdate: false, error: action.payload };
+		case LIST_USER_REQUEST.type:
+			return { ...state, loading: true, error: null };
+		case LIST_USER_SUCCESS.type:
+			return { ...state, userList: action.payload, loading: false };
+		case LIST_USER_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
 		default:
 			return state;
 	}

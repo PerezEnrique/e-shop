@@ -31,6 +31,30 @@ function Header() {
 					</button>
 					<nav className="collapse navbar-collapse" id="navbarNav">
 						<ul className="navbar-nav ml-auto">
+							{currentUser && currentUser.isAdmin && (
+								<li className="nav-item dropdown">
+									<button
+										className="btn btn-link nav-link dropdown-toggle"
+										id="navbarDropdown"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false"
+									>
+										Admin options
+									</button>
+									<div className="dropdown-menu" aria-labelledby="navbarDropdown">
+										<Link className="dropdown-item" to="/admin/users-list">
+											Users
+										</Link>
+										<Link className="dropdown-item" to="/admin/products-list">
+											Products
+										</Link>
+										<Link className="dropdown-item" to="/admin/orders-list">
+											Orders
+										</Link>
+									</div>
+								</li>
+							)}
 							<li className="nav-item">
 								<Link className="nav-link" to="/cart">
 									<FaShoppingCart /> Cart{" "}
@@ -45,17 +69,15 @@ function Header() {
 								</li>
 							) : (
 								<li className="nav-item dropdown">
-									<Link
-										className="nav-link dropdown-toggle"
-										to="#"
+									<button
+										className="btn btn-link nav-link dropdown-toggle"
 										id="navbarDropdown"
-										role="button"
 										data-toggle="dropdown"
 										aria-haspopup="true"
 										aria-expanded="false"
 									>
 										{currentUser.name}
-									</Link>
+									</button>
 									<div className="dropdown-menu" aria-labelledby="navbarDropdown">
 										<Link className="dropdown-item" to="/user">
 											Your profile

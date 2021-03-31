@@ -103,7 +103,7 @@ async function updateUserProfile(req, res) {
 //access: private (and only for admins)
 //desc: returns all user
 async function getAllUsers(req, res) {
-	const users = User.find({}).select("-password");
+	const users = await User.find({}).select("-password");
 	return res.status(200).json({ success: true, data: users });
 }
 module.exports = { createUser, authenticateUser, updateUserProfile, getAllUsers };
