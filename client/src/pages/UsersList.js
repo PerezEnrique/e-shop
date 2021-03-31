@@ -42,12 +42,12 @@ function UsersList() {
 								<td headers="name">{user.name}</td>
 								<td headers="email">{user.email}</td>
 								{!user.isAdmin ? (
-									<td className="text-success" headers="admin">
-										Admin
-									</td>
-								) : (
 									<td className="text-danger" headers="admin">
 										Not an admin
+									</td>
+								) : (
+									<td className="text-success" headers="admin">
+										Admin
 									</td>
 								)}
 								<td>
