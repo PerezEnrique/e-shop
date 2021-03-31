@@ -5,12 +5,16 @@ import { getUserList } from "../state_management/userState";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
-function UsersList() {
-	const { userList, loading, error } = useSelector(state => state.user);
+function UsersList({ history }) {
+	const { currentUser, userList, loading, error } = useSelector(state => state.user);
 	const dispatch = useDispatch();
 	useEffect(() => {
-		dispatch(getUserList());
-	}, [dispatch]);
+		if (currentUser && currentUser.isAdmin) {
+			dispatch(getUserList());
+		} else {
+			history.push("/not-authorized");
+		}
+	}, [currentUser, dispatch, history]);
 
 	const handleRemove = id => {
 		console.log("delete");
