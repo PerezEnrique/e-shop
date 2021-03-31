@@ -1,5 +1,6 @@
 import "./App.css";
 import { Switch, Route, Redirect } from "react-router-dom";
+import { AuthenticationRoute, PrivateRoute } from "./utils/AuthRoutes";
 import Header from "../src/components/Header";
 import HomePage from "./pages/HomePage";
 import SingleProduct from "./pages/SingleProduct";
@@ -21,16 +22,16 @@ function App() {
 			<Header />
 			<Switch>
 				<Route path="/product/:id" component={SingleProduct} />
-				<Route path="/shipping" component={ShippingPage} />
-				<Route path="/placeorder" component={PlaceOrderPage} />
-				<Route path="/payment" component={PaymentPage} />
-				<Route path="/order/:id" component={OrderPage} />
+				<PrivateRoute path="/shipping" component={ShippingPage} />
+				<PrivateRoute path="/placeorder" component={PlaceOrderPage} />
+				<PrivateRoute path="/payment" component={PaymentPage} />
+				<PrivateRoute path="/order/:id" component={OrderPage} />
 				<Route path="/admin/users-list" component={UsersList} />
-				<Route path="/sign-up" component={SignupPage} />
+				<AuthenticationRoute path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />
-				<Route path="/log-in" component={LogInPage} />
+				<AuthenticationRoute path="/log-in" component={LogInPage} />
 				<Route path="/not-found" component={PageNotFound} />
-				<Route path="/user" component={ProfilePage} />
+				<PrivateRoute path="/user" component={ProfilePage} />
 				<Route path="/cart" component={CartPage} />
 				<Route exact path="/" component={HomePage} />
 				<Redirect to="/not-found" />

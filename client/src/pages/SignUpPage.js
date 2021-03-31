@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { signUp } from "../state_management/userState";
@@ -6,8 +6,8 @@ import { objectIsEmpty } from "../utils/helpers";
 import { validateSignUp } from "../utils/validation";
 import Spinner from "../components/Spinner";
 
-function SignUpPage({ location, history }) {
-	const { currentUser, loading, error } = useSelector(state => state.user);
+function SignUpPage({ location }) {
+	const { loading, error } = useSelector(state => state.user);
 	const dispatch = useDispatch();
 	const [userData, setUserData] = useState({
 		email: "",
@@ -16,14 +16,6 @@ function SignUpPage({ location, history }) {
 		confirmPassword: "",
 	});
 	const [validationErrors, setValidationErrors] = useState({});
-
-	useEffect(() => {
-		if (currentUser) {
-			const { state } = location;
-			const redirectPath = state ? state.from.pathname : "/";
-			history.push(redirectPath);
-		}
-	}, [currentUser, location, history]);
 
 	const handleChange = e => {
 		setValidationErrors({});
@@ -124,7 +116,16 @@ function SignUpPage({ location, history }) {
 									Sign up
 								</button>
 								<p>
-									Already have an account? Log in <Link to="/log-in">here</Link>
+									Already have an account? Log in{" "}
+									<Link
+										to={
+											location.state
+												? { pathname: "/log-in", state: location.state }
+												: "/log-in"
+										}
+									>
+										here
+									</Link>
 								</p>
 							</div>
 						</form>
