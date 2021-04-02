@@ -18,7 +18,7 @@ function EditUserStatus({ match, history }) {
 			dispatch(resetUpdateStatus());
 			history.push("/admin/users-list");
 		}
-	}, [successfulUpdate, history]);
+	}, [successfulUpdate, dispatch, history]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
