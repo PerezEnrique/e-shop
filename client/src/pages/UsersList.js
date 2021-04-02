@@ -6,7 +6,7 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function UsersList({ history }) {
-	const { currentUser, userList, loading, error } = useSelector(state => state.user);
+	const { currentUser, usersList, loading, error } = useSelector(state => state.user);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		if (currentUser && currentUser.isAdmin) {
@@ -16,65 +16,54 @@ function UsersList({ history }) {
 		}
 	}, [currentUser, dispatch, history]);
 
-	const handleRemove = id => {
-		console.log("delete");
-	};
-
 	return (
 		<main className="container" role="main">
 			<h1 className="h3 mb-3">Users</h1>
-			<table className="table table-striped">
-				<thead>
-					<tr>
-						<th id="id">Id</th>
-						<th id="name">Name</th>
-						<th id="email">Email</th>
-						<th id="admin">Admin</th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{loading ? (
-						<Spinner />
-					) : error ? (
-						<Alert type="danger" message={error} />
-					) : (
-						userList.map(user => (
-							<tr>
-								<td headers="id">{user._id}</td>
-								<td headers="name">{user.name}</td>
-								<td headers="email">{user.email}</td>
-								{!user.isAdmin ? (
-									<td className="text-danger" headers="admin">
-										Not an admin
+			<section>
+				<table className="table table-striped">
+					<thead>
+						<tr>
+							<th id="id">Id</th>
+							<th id="name">Name</th>
+							<th id="email">Email</th>
+							<th id="admin">Admin</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{loading ? (
+							<Spinner />
+						) : error ? (
+							<Alert type="danger" message={error} />
+						) : (
+							usersList.map(user => (
+								<tr>
+									<td headers="id">{user._id}</td>
+									<td headers="name">{user.name}</td>
+									<td headers="email">{user.email}</td>
+									{!user.isAdmin ? (
+										<td className="text-danger" headers="admin">
+											Not an admin
+										</td>
+									) : (
+										<td className="text-success" headers="admin">
+											Admin
+										</td>
+									)}
+									<td>
+										<Link
+											className="btn btn-sm btn-light"
+											to={`/admin/user/${user._id}/edit-status`}
+										>
+											Edit
+										</Link>
 									</td>
-								) : (
-									<td className="text-success" headers="admin">
-										Admin
-									</td>
-								)}
-								<td>
-									<Link
-										className="btn btn-sm btn-light"
-										to={`/admin/user/${user._id}/edit`}
-									>
-										Edit
-									</Link>
-								</td>
-								<td>
-									<button
-										className="btn btn-sm btn-danger"
-										onClick={() => handleRemove(user._id)}
-									>
-										Remove
-									</button>
-								</td>
-							</tr>
-						))
-					)}
-				</tbody>
-			</table>
+								</tr>
+							))
+						)}
+					</tbody>
+				</table>
+			</section>
 		</main>
 	);
 }

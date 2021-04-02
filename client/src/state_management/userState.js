@@ -114,8 +114,7 @@ const initialState = {
 		: null,
 	loading: false,
 	successfulUpdate: false,
-	userList: [],
-	userListSuccessfullyLoaded: false,
+	usersList: [],
 	error: null,
 };
 
@@ -149,7 +148,7 @@ export default function userReducer(state = initialState, action) {
 		case LIST_USER_REQUEST.type:
 			return { ...state, loading: true, error: null };
 		case LIST_USER_SUCCESS.type:
-			return { ...state, userList: action.payload, loading: false };
+			return { ...state, usersList: action.payload, loading: false };
 		case LIST_USER_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		default:

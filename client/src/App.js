@@ -14,6 +14,7 @@ import PaymentPage from "./pages/PaymentPage";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
 import OrderPage from "./pages/OrderPage";
 import UsersList from "./pages/UsersList";
+import EditUserStatus from "./pages/EditUserStatus";
 import PageNotFound from "./pages/PageNotFound";
 import NotAuthorized from "./pages/NotAuthorized";
 
@@ -22,12 +23,13 @@ function App() {
 		<div>
 			<Header />
 			<Switch>
+				<PrivateRoute path="/admin/user/:id/edit-status" component={EditUserStatus} />
+				<PrivateRoute path="/admin/users-list" component={UsersList} />
 				<Route path="/product/:id" component={SingleProduct} />
 				<PrivateRoute path="/shipping" component={ShippingPage} />
 				<PrivateRoute path="/placeorder" component={PlaceOrderPage} />
 				<PrivateRoute path="/payment" component={PaymentPage} />
 				<PrivateRoute path="/order/:id" component={OrderPage} />
-				<PrivateRoute path="/admin/users-list" component={UsersList} />
 				<AuthenticationRoute path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />
 				<AuthenticationRoute path="/log-in" component={LogInPage} />
