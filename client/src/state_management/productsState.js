@@ -8,6 +8,9 @@ const PRODUCTS_FETCHING_FAILS = createAction("PRODUCTS_FETCHING_FAILS");
 const SINGLE_PRODUCT_FETCHING_REQUEST = createAction("SINGLE_PRODUCT_FETCHING_REQUEST");
 const SINGLE_PRODUCT_FETCHING_SUCCESS = createAction("SINGLE_PRODUCT_FETCHING_SUCCESS");
 const SINGLE_PRODUCT_FETCHING_FAILS = createAction("SINGLE_PRODUCT_FETCHING_FAILS");
+const DELETE_PRODUCT_REQUEST = createAction("DELETE_PRODUCT_REQUEST");
+const DELETE_PRODUCT_SUCCESS = createAction("DELETE_PRODUCT_SUCCESS");
+const DELETE_PRODUCT_FAILS = createAction("DELETE_PRODUCT_FAILS");
 
 export const fetchProducts = () => async dispatch => {
 	try {
@@ -21,7 +24,7 @@ export const fetchProducts = () => async dispatch => {
 			PRODUCTS_FETCHING_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
-					: ex.message
+					: `Error ocurred. ${ex.message}` //We cannot just use ex.message because that's taken as not handled
 			)
 		);
 	}
@@ -39,7 +42,23 @@ export const fetchSingleProduct = productId => async dispatch => {
 			SINGLE_PRODUCT_FETCHING_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
-					: ex.message
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
+export const deleteProduct = productId => async dispatch => {
+	try {
+		dispatch(DELETE_PRODUCT_REQUEST());
+		await http.delete(`/products/${productId}/delete`);
+		dispatch(DELETE_PRODUCT_SUCCESS());
+	} catch (ex) {
+		dispatch(
+			DELETE_PRODUCT_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
 			)
 		);
 	}
@@ -50,6 +69,7 @@ const initialState = {
 	products: [],
 	singleProduct: {},
 	loading: false,
+	successfullDeletion: false,
 	error: null,
 };
 
@@ -66,6 +86,12 @@ export default function productReducer(state = initialState, action) {
 		case SINGLE_PRODUCT_FETCHING_SUCCESS.type:
 			return { ...state, singleProduct: action.payload, loading: false };
 		case SINGLE_PRODUCT_FETCHING_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case DELETE_PRODUCT_REQUEST.type:
+			return { ...state, loading: true };
+		case DELETE_PRODUCT_SUCCESS.type:
+			return { ...state, loading: false, successfullDeletion: true };
+		case DELETE_PRODUCT_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		default:
 			return state;

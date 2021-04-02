@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts } from "../state_management/productsState";
+import { fetchProducts, deleteProduct } from "../state_management/productsState";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function ProductList({ history, match }) {
 	const { currentUser } = useSelector(state => state.user);
-	const { products, loading, error } = useSelector(state => state.products);
+	const { products, loading, successfullDeletion, error } = useSelector(
+		state => state.products
+	);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		if (currentUser && currentUser.isAdmin) {
@@ -15,10 +17,12 @@ function ProductList({ history, match }) {
 		} else {
 			history.push("/not-authorized");
 		}
-	}, [currentUser, dispatch, history]);
+	}, [currentUser, dispatch, history, successfullDeletion]);
 
-	const handleDelete = id => {
-		console.log("borrar");
+	const handleDelete = productId => {
+		if (window.confirm("Are you sure?")) {
+			dispatch(deleteProduct(productId));
+		}
 	};
 
 	return (

@@ -1,5 +1,11 @@
 const Product = require("../models/Product");
 
+//TEMPORARY ROUTE
+async function feedDB(req, res) {
+	Product.insertMany(req.body.allProducts);
+	res.send("ok");
+}
+
 //route: GET /products
 //access: public
 //desc: get all products
@@ -33,8 +39,8 @@ async function deleteProduct(req, res) {
 			errorMessage: "Couldn't find product with the provided id",
 		});
 	}
-	await Product.remove();
+	await product.remove();
 	return res.status(200).json({ success: true, data: "Product successfully removed" });
 }
 
-module.exports = { getProducts, getSingleProduct, deleteProduct };
+module.exports = { getProducts, getSingleProduct, deleteProduct, feedDB };
