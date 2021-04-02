@@ -20,24 +20,24 @@ function UsersList({ history }) {
 		<main className="container" role="main">
 			<h1 className="h3 mb-3">Users</h1>
 			<section>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th id="id">Id</th>
-							<th id="name">Name</th>
-							<th id="email">Email</th>
-							<th id="admin">Admin</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{loading ? (
-							<Spinner />
-						) : error ? (
-							<Alert type="danger" message={error} />
-						) : (
-							usersList.map(user => (
-								<tr>
+				{loading ? (
+					<Spinner />
+				) : error ? (
+					<Alert type="danger" message={error} />
+				) : (
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th id="id">Id</th>
+								<th id="name">Name</th>
+								<th id="email">Email</th>
+								<th id="admin">Admin</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{usersList.map(user => (
+								<tr key={user._id}>
 									<td headers="id">{user._id}</td>
 									<td headers="name">{user.name}</td>
 									<td headers="email">{user.email}</td>
@@ -59,10 +59,10 @@ function UsersList({ history }) {
 										</Link>
 									</td>
 								</tr>
-							))
-						)}
-					</tbody>
-				</table>
+							))}
+						</tbody>
+					</table>
+				)}
 			</section>
 		</main>
 	);
