@@ -1,13 +1,29 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { editUserAdminStatus, resetUpdateStatus } from "../state_management/userState";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
-function EditUserStatus({ match }) {
-	const { usersList, loading, error } = useSelector(state => state.user);
+function EditUserStatus({ match, history }) {
+	const { usersList, successfulUpdate, loading, error } = useSelector(
+		state => state.user
+	);
 	const user = usersList.find(user => user._id === match.params.id);
 	const [isAdmin, setIsAdmin] = useState(user.isAdmin);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (successfulUpdate) {
+			dispatch(resetUpdateStatus());
+			history.push("/admin/users-list");
+		}
+	}, [successfulUpdate, history]);
+
+	const handleSubmit = e => {
+		e.preventDefault();
+		dispatch(editUserAdminStatus(user._id, isAdmin));
+	};
 
 	return (
 		<main className="container" role="main">
@@ -20,10 +36,11 @@ function EditUserStatus({ match }) {
 					) : error ? (
 						<Alert type="danger" message={error} />
 					) : (
-						<form>
+						<form onSubmit={handleSubmit}>
 							<input
 								className="form-control-plaintext text-muted"
 								type="email"
+								readOnly
 								id="email"
 								name="email"
 								value={user.email}

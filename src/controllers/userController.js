@@ -108,23 +108,10 @@ async function getAllUsers(req, res) {
 	return res.status(200).json({ success: true, data: users });
 }
 
-// //route: GET /user/admin/:id/get-user
-// //access: private (and only for admins)
-// //desc: get a single user
-// async function getASingleUser(req, res) {
-// 	const user = await User.findById(req.params.id).select("-password");
-// 	if (!user)
-// 		return res
-// 			.status(404)
-// 			.json({ success: false, errorMessage: "Couldn't find user with the provided id" });
-
-// 	return res.status(200).json({ success: true, data: user });
-// }
-
 //route: PUT /user/admin/update-user
 //access: private (and only for admins)
-//desc: update other user's admin status
-async function updateUserAdminStatus(req, res) {
+//desc: edit other user's admin status
+async function editUserAdminStatus(req, res) {
 	const { isAdmin } = req.body;
 	const validationError = validateStatusValue(isAdmin);
 	if (validationError)
@@ -149,5 +136,5 @@ module.exports = {
 	authenticateUser,
 	updateUserProfile,
 	getAllUsers,
-	updateUserAdminStatus,
+	editUserAdminStatus,
 };

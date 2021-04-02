@@ -13,9 +13,13 @@ const USER_LOGOUT = createAction("USER_LOGOUT");
 const USER_UPDATE_PROFILE_REQUEST = createAction("USER_UPDATE_PROFILE_REQUEST");
 const USER_UPDATE_PROFILE_SUCCESS = createAction("USER_UPDATE_PROFILE_SUCCESS");
 const USER_UPDATE_PROFILE_FAILS = createAction("USER_UPDATE_PROFILE_FAILS");
-const LIST_USER_REQUEST = createAction("LIST_USER_REQUEST");
-const LIST_USER_SUCCESS = createAction("LIST_USER_SUCCESS");
-const LIST_USER_FAILS = createAction("LIST_USER_FAILS");
+const LIST_USERS_REQUEST = createAction("LIST_USERS_REQUEST");
+const LIST_USERS_SUCCESS = createAction("LIST_USERS_SUCCESS");
+const LIST_USERS_FAILS = createAction("LIST_USERS_FAILS");
+const EDIT_ADMIN_STATUS_REQUEST = createAction("EDIT_ADMIN_STATUS_REQUEST");
+const EDIT_ADMIN_STATUS_SUCCESS = createAction("EDIT_ADMIN_STATUS_SUCCESS");
+const EDIT_ADMIN_STATUS_FAILS = createAction("EDIT_ADMIN_STATUS_FAILS");
+const EDIT_ADMIN_STATUS_RESET = createAction("EDIT_ADMIN_STATUS_RESET");
 
 http.setAuthToken(localStorage.getItem("authToken")); //If no token the property simply will be undefinned
 
@@ -92,20 +96,40 @@ export const updateProfile = dataToUpdate => async dispatch => {
 
 export const getUserList = () => async dispatch => {
 	try {
-		dispatch(LIST_USER_REQUEST());
+		dispatch(LIST_USERS_REQUEST());
 		const {
 			data: { data },
 		} = await http.get("/user/admin/get-users");
-		dispatch(LIST_USER_SUCCESS(data));
+		dispatch(LIST_USERS_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
-			LIST_USER_FAILS(
+			LIST_USERS_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
 					: `Error ocurred. ${ex.message}`
 			)
 		);
 	}
+};
+
+export const editUserAdminStatus = (id, isAdmin) => async dispatch => {
+	try {
+		dispatch(EDIT_ADMIN_STATUS_REQUEST());
+		await http.put(`/user/admin/${id}/edit-status`, { isAdmin });
+		dispatch(EDIT_ADMIN_STATUS_SUCCESS());
+	} catch (ex) {
+		dispatch(
+			EDIT_ADMIN_STATUS_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
+export const resetUpdateStatus = () => dispatch => {
+	dispatch(EDIT_ADMIN_STATUS_RESET());
 };
 
 const initialState = {
@@ -145,12 +169,20 @@ export default function userReducer(state = initialState, action) {
 			};
 		case USER_UPDATE_PROFILE_FAILS.type:
 			return { ...state, loading: false, successfulUpdate: false, error: action.payload };
-		case LIST_USER_REQUEST.type:
+		case LIST_USERS_REQUEST.type:
 			return { ...state, loading: true, error: null };
-		case LIST_USER_SUCCESS.type:
+		case LIST_USERS_SUCCESS.type:
 			return { ...state, usersList: action.payload, loading: false };
-		case LIST_USER_FAILS.type:
+		case LIST_USERS_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
+		case EDIT_ADMIN_STATUS_REQUEST.type:
+			return { ...state, loading: true, successfulUpdate: false, error: null };
+		case EDIT_ADMIN_STATUS_SUCCESS.type:
+			return { ...state, successfulUpdate: true };
+		case EDIT_ADMIN_STATUS_FAILS.type:
+			return { ...state, loading: false, successfulUpdate: false, error: action.payload };
+		case EDIT_ADMIN_STATUS_RESET.type:
+			return { ...state, loading: false, successfulUpdate: false };
 		default:
 			return state;
 	}
