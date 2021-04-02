@@ -43,6 +43,7 @@ function ProductList({ history, match }) {
 								<th id="brand">Brand</th>
 								<th id="price">Price</th>
 								<th></th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
