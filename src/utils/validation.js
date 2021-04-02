@@ -53,4 +53,16 @@ function validateDataToUpdate(userData) {
 	return validationError;
 }
 
-module.exports = { validateSignUp, validateLogIn, validateDataToUpdate };
+function validateStatusValue(userData) {
+	const boolean = Joi.boolean();
+
+	const { error } = boolean.validate(userData);
+	return error;
+}
+
+module.exports = {
+	validateSignUp,
+	validateLogIn,
+	validateDataToUpdate,
+	validateStatusValue,
+};
