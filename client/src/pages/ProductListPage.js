@@ -16,7 +16,6 @@ function ProductList({ history }) {
 	);
 	const dispatch = useDispatch();
 	useEffect(() => {
-		console.log("el primero");
 		if (currentUser && currentUser.isAdmin) {
 			dispatch(fetchProducts());
 		} else {
@@ -25,7 +24,6 @@ function ProductList({ history }) {
 	}, [currentUser, dispatch, history]);
 
 	useEffect(() => {
-		console.log("el segundo", "succ es", successfullDeletion);
 		if (successfullDeletion) {
 			dispatch(fetchProducts());
 			dispatch(resetProductDeleteProcess());
