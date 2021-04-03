@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { PayPalButton } from "react-paypal-button-v2";
 import http from "../services/httpServices";
-import { getOrder, payOrder, resetPaymentStatus } from "../state_management/orderState";
+import {
+	getOrder,
+	payOrder,
+	resetOrderPaymentProcess,
+} from "../state_management/orderState";
 import ProductListItem from "../components/ProductListItem";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
@@ -44,7 +48,7 @@ function OrderPage({ match }) {
 		};
 
 		if (currentOrder.orderItems.length < 1 || successfulOrderPayment) {
-			dispatch(resetPaymentStatus);
+			dispatch(resetOrderPaymentProcess);
 			dispatch(getOrder(match.params.id));
 		} else if (!currentOrder.isPaid) {
 			if (!window.paypal) {

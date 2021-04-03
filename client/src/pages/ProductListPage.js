@@ -1,23 +1,36 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts, deleteProduct } from "../state_management/productsState";
+import {
+	fetchProducts,
+	deleteProduct,
+	resetProductDeleteProcess,
+} from "../state_management/productsState";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
-function ProductList({ history, match }) {
+function ProductList({ history }) {
 	const { currentUser } = useSelector(state => state.user);
 	const { products, loading, successfullDeletion, error } = useSelector(
 		state => state.products
 	);
 	const dispatch = useDispatch();
 	useEffect(() => {
+		console.log("el primero");
 		if (currentUser && currentUser.isAdmin) {
 			dispatch(fetchProducts());
 		} else {
 			history.push("/not-authorized");
 		}
-	}, [currentUser, dispatch, history, successfullDeletion]);
+	}, [currentUser, dispatch, history]);
+
+	useEffect(() => {
+		console.log("el segundo", "succ es", successfullDeletion);
+		if (successfullDeletion) {
+			dispatch(fetchProducts());
+			dispatch(resetProductDeleteProcess());
+		}
+	}, [successfullDeletion, dispatch]);
 
 	const handleDelete = productId => {
 		if (window.confirm("Are you sure?")) {

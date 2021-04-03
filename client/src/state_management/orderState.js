@@ -87,7 +87,7 @@ export const payOrder = (orderId, paymentResult) => async dispatch => {
 	}
 };
 
-export const resetPaymentStatus = () => dispatch => {
+export const resetOrderPaymentProcess = () => dispatch => {
 	dispatch(ORDER_PAY_RESET());
 };
 

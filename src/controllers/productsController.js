@@ -1,11 +1,5 @@
 const Product = require("../models/Product");
 
-//TEMPORARY ROUTE
-async function feedDB(req, res) {
-	Product.insertMany(req.body.allProducts);
-	res.send("ok");
-}
-
 //route: GET /products
 //access: public
 //desc: get all products
@@ -43,4 +37,4 @@ async function deleteProduct(req, res) {
 	return res.status(200).json({ success: true, data: "Product successfully removed" });
 }
 
-module.exports = { getProducts, getSingleProduct, deleteProduct, feedDB };
+module.exports = { getProducts, getSingleProduct, deleteProduct };

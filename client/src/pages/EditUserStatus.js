@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { editUserAdminStatus, resetUpdateStatus } from "../state_management/userState";
+import { editUserAdminStatus, resetUpdateProcess } from "../state_management/userState";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
@@ -15,7 +15,7 @@ function EditUserStatus({ match, history }) {
 
 	useEffect(() => {
 		if (successfulUpdate) {
-			dispatch(resetUpdateStatus());
+			dispatch(resetUpdateProcess());
 			history.push("/admin/users-list");
 		}
 	}, [successfulUpdate, dispatch, history]);

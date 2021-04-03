@@ -128,7 +128,7 @@ export const editUserAdminStatus = (id, isAdmin) => async dispatch => {
 	}
 };
 
-export const resetUpdateStatus = () => dispatch => {
+export const resetUpdateProcess = () => dispatch => {
 	dispatch(EDIT_ADMIN_STATUS_RESET());
 };
 

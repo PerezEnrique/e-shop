@@ -11,6 +11,7 @@ const SINGLE_PRODUCT_FETCHING_FAILS = createAction("SINGLE_PRODUCT_FETCHING_FAIL
 const DELETE_PRODUCT_REQUEST = createAction("DELETE_PRODUCT_REQUEST");
 const DELETE_PRODUCT_SUCCESS = createAction("DELETE_PRODUCT_SUCCESS");
 const DELETE_PRODUCT_FAILS = createAction("DELETE_PRODUCT_FAILS");
+const DELETE_PRODUCT_RESET = createAction("DELETE_PRODUCT_RESET");
 
 export const fetchProducts = () => async dispatch => {
 	try {
@@ -64,6 +65,10 @@ export const deleteProduct = productId => async dispatch => {
 	}
 };
 
+export const resetProductDeleteProcess = () => dispatch => {
+	dispatch(DELETE_PRODUCT_RESET());
+};
+
 //REDUCER
 const initialState = {
 	products: [],
@@ -93,6 +98,8 @@ export default function productReducer(state = initialState, action) {
 			return { ...state, loading: false, successfullDeletion: true };
 		case DELETE_PRODUCT_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
+		case DELETE_PRODUCT_RESET.type:
+			return { ...state, successfullDeletion: false };
 		default:
 			return state;
 	}
