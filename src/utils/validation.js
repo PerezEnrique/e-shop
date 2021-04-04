@@ -60,9 +60,31 @@ function validateStatusValue(userData) {
 	return error;
 }
 
+function validateProductData(productData) {
+	const schema = Joi.object({
+		name: Joi.string().required().label("Name"),
+		brand: Joi.string().required().label("Brand"),
+		image: Joi.string().label("Image"),
+		price: Joi.number().required().positive().label("Price"),
+		description: Joi.string().required().label("Description"),
+		countInStock: Joi.number().required().positive().label("Count in stock"),
+	});
+
+	let validationError = null;
+	const { error } = schema.validate(productData, { abortEarly: false });
+	if (error) {
+		validationError = "";
+		for (let item of error.details) {
+			validationError += ` ${item.message}.`;
+		}
+	}
+	return validationError;
+}
+
 module.exports = {
 	validateSignUp,
 	validateLogIn,
 	validateDataToUpdate,
 	validateStatusValue,
+	validateProductData,
 };

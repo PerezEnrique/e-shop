@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const { validateProductData } = require("../utils/validation");
 
 //route: GET /products
 //access: public
@@ -22,6 +23,53 @@ async function getSingleProduct(req, res) {
 	return res.status(200).json({ success: true, data: product });
 }
 
+//route: POST /products
+//access: private (and only for admins)
+//desc: creates a new product
+async function createProduct(req, res) {
+	const { name, brand, image, price, description, countInStock } = req.body;
+
+	const validationError = validateProductData(req.body);
+	if (validationError)
+		return res.status(400).json({ success: false, errorMessage: validationError });
+
+	const newProduct = new Product({
+		name,
+		user: req.user._id,
+		brand,
+		image,
+		price,
+		description,
+		countInStock,
+	});
+
+	const createdProduct = await newProduct.save();
+	return res.status(201).json({ success: true, data: createdProduct });
+}
+
+//route: PUT /products/:id/update
+//access: private (and only for admins)
+//desc: updates a product
+async function updateProduct(req, res) {
+	const { name, brand, image, price, description, countInStock } = req.body;
+
+	const validationError = validateProductData(req.body);
+	if (validationError)
+		return res.status(400).json({ success: false, errorMessage: validationError });
+
+	const product = await Product.findByIdAndUpdate(
+		req.params.id,
+		{ name, brand, image, price, description, countInStock },
+		{ new: true, useFindAndModify: false }
+	);
+	if (!product)
+		return res
+			.status(404)
+			.json({ success: false, errorMessage: "Couldn't find a product with provided Id" });
+
+	return res.status(201).json({ success: true, data: product });
+}
+
 //route: DELETE /products/:id
 //access: private (and only for admins)
 //desc: delete a product
@@ -37,4 +85,10 @@ async function deleteProduct(req, res) {
 	return res.status(200).json({ success: true, data: "Product successfully removed" });
 }
 
-module.exports = { getProducts, getSingleProduct, deleteProduct };
+module.exports = {
+	getProducts,
+	getSingleProduct,
+	createProduct,
+	updateProduct,
+	deleteProduct,
+};
