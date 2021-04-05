@@ -58,7 +58,7 @@ function Header() {
 							<li className="nav-item">
 								<Link className="nav-link" to="/cart">
 									<FaShoppingCart /> Cart{" "}
-									{cartItems.length > 0 && `(${cartItems.length})`}
+									{cartItems && cartItems.length > 0 && `(${cartItems.length})`}
 								</Link>
 							</li>
 							{!currentUser ? (
