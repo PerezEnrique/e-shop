@@ -112,10 +112,10 @@ export const getUserList = () => async dispatch => {
 	}
 };
 
-export const editUserAdminStatus = (id, isAdmin) => async dispatch => {
+export const editUserAdminStatus = (userId, isAdmin) => async dispatch => {
 	try {
 		dispatch(EDIT_ADMIN_STATUS_REQUEST());
-		await http.put(`/user/admin/${id}/edit-status`, { isAdmin });
+		await http.put(`/user/admin/${userId}/edit-status`, { isAdmin });
 		dispatch(EDIT_ADMIN_STATUS_SUCCESS());
 	} catch (ex) {
 		dispatch(
