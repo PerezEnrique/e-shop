@@ -79,7 +79,7 @@ function ProfilePage() {
 									required
 								/>
 								{validationErrors.email && (
-									<div className="alert alert-danger">{validationErrors.email}</div>
+									<Alert type="danger" message={validationErrors.email} />
 								)}
 							</div>
 							<div className="form-group">
@@ -95,7 +95,7 @@ function ProfilePage() {
 									required
 								/>
 								{validationErrors.name && (
-									<div className="alert alert-danger">{validationErrors.name}</div>
+									<Alert type="danger" message={validationErrors.name} />
 								)}
 							</div>
 							<div className="form-group">
@@ -111,7 +111,7 @@ function ProfilePage() {
 									required
 								/>
 								{validationErrors.password && (
-									<div className="alert alert-danger">{validationErrors.password}</div>
+									<Alert type="danger" message={validationErrors.password} />
 								)}
 							</div>
 							<div className="form-group">
@@ -127,12 +127,10 @@ function ProfilePage() {
 									required
 								/>
 								{validationErrors.confirmPassword && (
-									<div className="alert alert-danger">
-										{validationErrors.confirmPassword}
-									</div>
+									<Alert type="danger" message={validationErrors.confirmPassword} />
 								)}
 							</div>
-							{error && <div className="alert alert-danger">{error}</div>}
+							{error && <Alert type="danger" message={error} />}
 							{successfulUpdate && (
 								<div className="alert alert-success">Profile successfuly updated</div>
 							)}

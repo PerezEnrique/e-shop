@@ -23,13 +23,13 @@ const EDIT_ADMIN_STATUS_RESET = createAction("EDIT_ADMIN_STATUS_RESET");
 
 http.setAuthToken(localStorage.getItem("authToken")); //If no token the property simply will be undefinned
 
-export const signUp = (email, name, password) => async dispatch => {
+export const signUp = userData => async dispatch => {
 	try {
 		dispatch(USER_SIGNUP_REQUEST());
 		const {
 			headers,
 			data: { data },
-		} = await http.post("/user/sign-up", { email, name, password });
+		} = await http.post("/user/sign-up", userData);
 		dispatch(USER_SIGNUP_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -44,13 +44,13 @@ export const signUp = (email, name, password) => async dispatch => {
 	}
 };
 
-export const logIn = (email, password) => async dispatch => {
+export const logIn = userData => async dispatch => {
 	try {
 		dispatch(USER_LOGIN_REQUEST());
 		const {
 			headers,
 			data: { data },
-		} = await http.post("/user/log-in", { email, password });
+		} = await http.post("/user/log-in", userData);
 		dispatch(USER_LOGIN_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));

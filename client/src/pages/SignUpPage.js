@@ -5,6 +5,7 @@ import { signUp } from "../state_management/userState";
 import { objectIsEmpty } from "../utils/helpers";
 import { validateSignUp } from "../utils/validation";
 import Spinner from "../components/Spinner";
+import Alert from "../components/Alert";
 
 function SignUpPage({ location }) {
 	const { loading, error } = useSelector(state => state.user);
@@ -31,8 +32,7 @@ function SignUpPage({ location }) {
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			const { email, name, password } = userData;
-			dispatch(signUp(email, name, password));
+			dispatch(signUp(userData));
 		}
 	};
 
@@ -57,7 +57,7 @@ function SignUpPage({ location }) {
 									required
 								/>
 								{validationErrors.email && (
-									<div className="alert alert-danger">{validationErrors.email}</div>
+									<Alert type="danger" message={validationErrors.email} />
 								)}
 							</div>
 							<div className="form-group">
@@ -73,7 +73,7 @@ function SignUpPage({ location }) {
 									required
 								/>
 								{validationErrors.name && (
-									<div className="alert alert-danger">{validationErrors.name}</div>
+									<Alert type="danger" message={validationErrors.name} />
 								)}
 							</div>
 							<div className="form-group">
@@ -89,7 +89,7 @@ function SignUpPage({ location }) {
 									required
 								/>
 								{validationErrors.password && (
-									<div className="alert alert-danger">{validationErrors.password}</div>
+									<Alert type="danger" message={validationErrors.password} />
 								)}
 							</div>
 							<div className="form-group">
@@ -105,12 +105,10 @@ function SignUpPage({ location }) {
 									required
 								/>
 								{validationErrors.confirmPassword && (
-									<div className="alert alert-danger">
-										{validationErrors.confirmPassword}
-									</div>
+									<Alert type="danger" message={validationErrors.confirmPassword} />
 								)}
 							</div>
-							{error && <div className="alert alert-danger">{error}</div>}
+							{error && <Alert type="danger" message={error} />}
 							<div className="text-center">
 								<button className="mb-2 btn btn-primary" type="submit" disabled={loading}>
 									Sign up

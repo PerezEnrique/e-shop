@@ -5,6 +5,7 @@ import { logIn } from "../state_management/userState";
 import Spinner from "../components/Spinner";
 import { validateLogIn } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
+import Alert from "../components/Alert";
 
 function LogInPage({ location }) {
 	const { loading, error } = useSelector(state => state.user);
@@ -29,8 +30,7 @@ function LogInPage({ location }) {
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			const { email, password } = userData;
-			dispatch(logIn(email, password));
+			dispatch(logIn(userData));
 		}
 	};
 
@@ -56,7 +56,7 @@ function LogInPage({ location }) {
 									required
 								/>
 								{validationErrors.email && (
-									<div className="alert alert-danger">{validationErrors.email}</div>
+									<Alert type="danger" message={validationErrors.email} />
 								)}
 							</div>
 							<div className="form-group">
@@ -72,10 +72,10 @@ function LogInPage({ location }) {
 									required
 								/>
 								{validationErrors.password && (
-									<div className="alert alert-danger">{validationErrors.password}</div>
+									<Alert type="danger" message={validationErrors.password} />
 								)}
 							</div>
-							{error && <div className="alert alert-danger">{error}</div>}
+							{error && <Alert type="danger" message={error} />}
 							<div className="text-center">
 								<button className="mb-2 btn btn-primary" type="submit" disabled={loading}>
 									Log In
