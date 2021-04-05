@@ -53,7 +53,7 @@ function UsersList({ history }) {
 									<td>
 										<Link
 											className="btn btn-sm btn-light"
-											to={`/admin/user/${user._id}/edit-status`}
+											to={`/admin/users/${user._id}/edit-status`}
 										>
 											Edit
 										</Link>

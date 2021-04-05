@@ -73,7 +73,7 @@ function ProductList({ history }) {
 									<td>
 										<Link
 											className="btn btn-sm btn-light"
-											to={`/admin/product/${product._id}/edit`}
+											to={`/admin/products/${product._id}/update`}
 										>
 											Edit
 										</Link>

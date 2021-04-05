@@ -12,6 +12,10 @@ const CREATE_PRODUCT_REQUEST = createAction("CREATE_PRODUCT_REQUEST");
 const CREATE_PRODUCT_SUCCESS = createAction("CREATE_PRODUCT_SUCCESS");
 const CREATE_PRODUCT_FAILS = createAction("CREATE_PRODUCT_FAILS");
 const CREATE_PRODUCT_RESET = createAction("CREATE_PRODUCT_RESET");
+const UPDATE_PRODUCT_REQUEST = createAction("UPDATE_PRODUCT_REQUEST");
+const UPDATE_PRODUCT_SUCCESS = createAction("UPDATE_PRODUCT_SUCCESS");
+const UPDATE_PRODUCT_FAILS = createAction("UPDATE_PRODUCT_FAILS");
+const UPDATE_PRODUCT_RESET = createAction("UPDATE_PRODUCT_RESET");
 const DELETE_PRODUCT_REQUEST = createAction("DELETE_PRODUCT_REQUEST");
 const DELETE_PRODUCT_SUCCESS = createAction("DELETE_PRODUCT_SUCCESS");
 const DELETE_PRODUCT_FAILS = createAction("DELETE_PRODUCT_FAILS");
@@ -69,6 +73,22 @@ export const createProduct = productData => async dispatch => {
 	}
 };
 
+export const updateProduct = (productId, updatedData) => async dispatch => {
+	try {
+		dispatch(UPDATE_PRODUCT_REQUEST());
+		await http.put(`/products/${productId}/update`, updatedData);
+		dispatch(UPDATE_PRODUCT_SUCCESS());
+	} catch (ex) {
+		dispatch(
+			UPDATE_PRODUCT_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
 export const deleteProduct = productId => async dispatch => {
 	try {
 		dispatch(DELETE_PRODUCT_REQUEST());
@@ -85,10 +105,15 @@ export const deleteProduct = productId => async dispatch => {
 	}
 };
 
-export const resetProductCreateProcess = () => dispatch => {
+export const resetProductCreationProcess = () => dispatch => {
 	dispatch(CREATE_PRODUCT_RESET());
 };
-export const resetProductDeleteProcess = () => dispatch => {
+
+export const resetProductUpdateProcess = () => dispatch => {
+	dispatch(UPDATE_PRODUCT_RESET());
+};
+
+export const resetProductDeletionProcess = () => dispatch => {
 	dispatch(DELETE_PRODUCT_RESET());
 };
 
@@ -97,8 +122,9 @@ const initialState = {
 	products: [],
 	singleProduct: {},
 	loading: false,
-	successfullCreation: false,
-	successfullDeletion: false,
+	successfulCreation: false,
+	successfulUpdate: false,
+	successfulDeletion: false,
 	error: null,
 };
 
@@ -119,19 +145,27 @@ export default function productReducer(state = initialState, action) {
 		case CREATE_PRODUCT_REQUEST.type:
 			return { ...state, loading: true, error: null };
 		case CREATE_PRODUCT_SUCCESS.type:
-			return { ...state, loading: false, successfullCreation: true };
+			return { ...state, loading: false, successfulCreation: true };
 		case CREATE_PRODUCT_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case CREATE_PRODUCT_RESET.type:
-			return { ...state, successfullCreation: false };
+			return { ...state, successfulCreation: false };
+		case UPDATE_PRODUCT_REQUEST.type:
+			return { ...state, loading: true, error: null };
+		case UPDATE_PRODUCT_SUCCESS.type:
+			return { ...state, loading: false, successfulUpdate: true };
+		case UPDATE_PRODUCT_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case UPDATE_PRODUCT_RESET.type:
+			return { ...state, successfulUpdate: false };
 		case DELETE_PRODUCT_REQUEST.type:
 			return { ...state, loading: true, error: null };
 		case DELETE_PRODUCT_SUCCESS.type:
-			return { ...state, loading: false, successfullDeletion: true };
+			return { ...state, loading: false, successfulDeletion: true };
 		case DELETE_PRODUCT_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case DELETE_PRODUCT_RESET.type:
-			return { ...state, successfullDeletion: false };
+			return { ...state, successfulDeletion: false };
 		default:
 			return state;
 	}
