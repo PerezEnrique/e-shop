@@ -8,6 +8,10 @@ const PRODUCTS_FETCHING_FAILS = createAction("PRODUCTS_FETCHING_FAILS");
 const SINGLE_PRODUCT_FETCHING_REQUEST = createAction("SINGLE_PRODUCT_FETCHING_REQUEST");
 const SINGLE_PRODUCT_FETCHING_SUCCESS = createAction("SINGLE_PRODUCT_FETCHING_SUCCESS");
 const SINGLE_PRODUCT_FETCHING_FAILS = createAction("SINGLE_PRODUCT_FETCHING_FAILS");
+const CREATE_PRODUCT_REQUEST = createAction("CREATE_PRODUCT_REQUEST");
+const CREATE_PRODUCT_SUCCESS = createAction("CREATE_PRODUCT_SUCCESS");
+const CREATE_PRODUCT_FAILS = createAction("CREATE_PRODUCT_FAILS");
+const CREATE_PRODUCT_RESET = createAction("CREATE_PRODUCT_RESET");
 const DELETE_PRODUCT_REQUEST = createAction("DELETE_PRODUCT_REQUEST");
 const DELETE_PRODUCT_SUCCESS = createAction("DELETE_PRODUCT_SUCCESS");
 const DELETE_PRODUCT_FAILS = createAction("DELETE_PRODUCT_FAILS");
@@ -49,6 +53,22 @@ export const fetchSingleProduct = productId => async dispatch => {
 	}
 };
 
+export const createProduct = productData => async dispatch => {
+	try {
+		dispatch(CREATE_PRODUCT_REQUEST());
+		await http.post("/products", productData);
+		dispatch(CREATE_PRODUCT_SUCCESS());
+	} catch (ex) {
+		dispatch(
+			CREATE_PRODUCT_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
 export const deleteProduct = productId => async dispatch => {
 	try {
 		dispatch(DELETE_PRODUCT_REQUEST());
@@ -65,6 +85,9 @@ export const deleteProduct = productId => async dispatch => {
 	}
 };
 
+export const resetProductCreateProcess = () => dispatch => {
+	dispatch(CREATE_PRODUCT_RESET());
+};
 export const resetProductDeleteProcess = () => dispatch => {
 	dispatch(DELETE_PRODUCT_RESET());
 };
@@ -74,6 +97,7 @@ const initialState = {
 	products: [],
 	singleProduct: {},
 	loading: false,
+	successfullCreation: false,
 	successfullDeletion: false,
 	error: null,
 };
@@ -92,8 +116,16 @@ export default function productReducer(state = initialState, action) {
 			return { ...state, singleProduct: action.payload, loading: false };
 		case SINGLE_PRODUCT_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
+		case CREATE_PRODUCT_REQUEST.type:
+			return { ...state, loading: true, error: null };
+		case CREATE_PRODUCT_SUCCESS.type:
+			return { ...state, loading: false, successfullCreation: true };
+		case CREATE_PRODUCT_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case CREATE_PRODUCT_RESET.type:
+			return { ...state, successfullCreation: false };
 		case DELETE_PRODUCT_REQUEST.type:
-			return { ...state, loading: true };
+			return { ...state, loading: true, error: null };
 		case DELETE_PRODUCT_SUCCESS.type:
 			return { ...state, loading: false, successfullDeletion: true };
 		case DELETE_PRODUCT_FAILS.type:

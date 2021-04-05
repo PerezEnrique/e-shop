@@ -81,3 +81,24 @@ export function validateShippingData(userData) {
 
 	return errors;
 }
+
+export function validateProductData(productData) {
+	const schema = Joi.object({
+		name: Joi.string().required().label("Name"),
+		brand: Joi.string().required().label("Brand"),
+		image: Joi.string().label("Image"),
+		price: Joi.number().required().min(0).label("Price"),
+		description: Joi.string().required().label("Description"),
+		countInStock: Joi.number().required().min(0).label("Count in stock"),
+	});
+
+	const errors = {};
+	const { error } = schema.validate(productData, { abortEarly: false });
+	if (error) {
+		for (let item of error.details) {
+			errors[item.path[0]] = item.message;
+		}
+	}
+
+	return errors;
+}

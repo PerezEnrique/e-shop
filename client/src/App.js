@@ -14,8 +14,9 @@ import PaymentPage from "./pages/PaymentPage";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
 import OrderPage from "./pages/OrderPage";
 import UsersListPage from "./pages/UsersListPage";
-import EditUserStatus from "./pages/EditUserStatus";
+import EditUserStatusPage from "./pages/EditUserStatusPage";
 import ProductListPage from "./pages/ProductListPage";
+import CreateProductPage from "./pages/CreateProductPage";
 import PageNotFound from "./pages/PageNotFound";
 import NotAuthorized from "./pages/NotAuthorized";
 
@@ -24,7 +25,8 @@ function App() {
 		<div>
 			<Header />
 			<Switch>
-				<PrivateRoute path="/admin/user/:id/edit-status" component={EditUserStatus} />
+				<PrivateRoute path="/admin/user/:id/edit-status" component={EditUserStatusPage} />
+				<PrivateRoute path="/admin/create-product" component={CreateProductPage} />
 				<PrivateRoute path="/admin/products-list" component={ProductListPage} />
 				<PrivateRoute path="/admin/users-list" component={UsersListPage} />
 				<Route path="/product/:id" component={SingleProduct} />

@@ -39,8 +39,10 @@ function ProductList({ history }) {
 	return (
 		<main className="container" role="main">
 			<div className="d-flex justify-content-between mb-3">
-				<h1 className="h3 mb-3">Products</h1>
-				<button className="btn btn-primary">Add new product</button>
+				<h1 className="h3">Products</h1>
+				<Link className="btn btn-primary" to="/admin/create-product">
+					Add new product
+				</Link>
 			</div>
 			<section>
 				{loading ? (
