@@ -16,17 +16,15 @@ function PlaceOrderPage({ history }) {
 		shippingData,
 		paymentMethod,
 	} = useSelector(state => state.cart);
-	const { currentOrder, successfulOrderCreation, error } = useSelector(
-		state => state.order
-	);
+	const { currentOrder, successfulCreation, error } = useSelector(state => state.order);
 	const { address, city, postalCode, country } = shippingData;
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (successfulOrderCreation) {
+		if (successfulCreation) {
 			history.push(`order/${currentOrder._id}`);
 		}
-	}, [successfulOrderCreation, history, currentOrder._id]);
+	}, [successfulCreation, history, currentOrder._id]);
 
 	useEffect(() => {
 		dispatch(setPrices());

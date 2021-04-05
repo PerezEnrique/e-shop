@@ -4,14 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import {
 	fetchProducts,
 	deleteProduct,
-	resetProductDeleteProcess,
+	resetProductDeletionProcess,
 } from "../state_management/productsState";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function ProductList({ history }) {
 	const { currentUser } = useSelector(state => state.user);
-	const { products, loading, successfullDeletion, error } = useSelector(
+	const { products, loading, successfulDeletion, error } = useSelector(
 		state => state.products
 	);
 	const dispatch = useDispatch();
@@ -24,11 +24,11 @@ function ProductList({ history }) {
 	}, [currentUser, dispatch, history]);
 
 	useEffect(() => {
-		if (successfullDeletion) {
+		if (successfulDeletion) {
 			dispatch(fetchProducts());
-			dispatch(resetProductDeleteProcess());
+			dispatch(resetProductDeletionProcess());
 		}
-	}, [successfullDeletion, dispatch]);
+	}, [successfulDeletion, dispatch]);
 
 	const handleDelete = productId => {
 		if (window.confirm("Are you sure?")) {

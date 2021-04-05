@@ -97,8 +97,8 @@ const initialState = {
 		orderItems: [],
 		shippingData: {}, //Estos segundos pisos deben estar definidos, sin importar que vacios, ya que operaremos o destructuraremos sobre ellos en el montado
 	},
-	successfulOrderCreation: false,
-	succesfulOrderPayment: false,
+	successfulCreation: false,
+	successfulPayment: false,
 	userOrders: [],
 	loading: false,
 	error: null,
@@ -113,7 +113,7 @@ export default function orderReducer(state = initialState, action) {
 				...state,
 				currentOrder: action.payload,
 				loading: false,
-				successfulOrderCreation: true,
+				successfulCreation: true,
 			};
 		case CREATE_ORDER_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
@@ -136,12 +136,12 @@ export default function orderReducer(state = initialState, action) {
 				...state,
 				currentOrder: action.payload,
 				loading: false,
-				successfulOrderPayment: true,
+				successfulPayment: true,
 			};
 		case ORDER_PAY_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case ORDER_PAY_RESET.type:
-			return { ...state, successfulOrderPayment: false };
+			return { ...state, successfulPayment: false };
 		default:
 			return state;
 	}

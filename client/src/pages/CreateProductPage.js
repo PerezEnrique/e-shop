@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
 	createProduct,
-	resetProductCreateProcess,
+	resetProductCreationProcess,
 } from "../state_management/productsState";
 import { validateProductData } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
@@ -11,7 +11,7 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function CreateProductPage({ history }) {
-	const { successfullCreation, loading, error } = useSelector(state => state.products);
+	const { successfulCreation, loading, error } = useSelector(state => state.products);
 	const [productData, setProductData] = useState({
 		name: "",
 		brand: "",
@@ -23,11 +23,11 @@ function CreateProductPage({ history }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (successfullCreation) {
-			dispatch(resetProductCreateProcess());
+		if (successfulCreation) {
+			dispatch(resetProductCreationProcess());
 			history.push("/admin/products-list");
 		}
-	}, [successfullCreation, dispatch, history]);
+	}, [successfulCreation, dispatch, history]);
 
 	const handleChange = e => {
 		setValidationErrors({});
