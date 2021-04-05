@@ -3,12 +3,13 @@ import http from "../services/httpServices";
 
 //ACTIONS
 const PRODUCT_FETCHING_START = createAction("PRODUCT_FETCHING_START");
-const ADD_ITEM_TO_CART = createAction("ADD_ITEM_TO_CART");
+const PRODUCT_FETCHING_SUCCESS = createAction("PRODUCT_FETCHING_SUCCESS");
 const PRODUCT_FETCHING_FAILS = createAction("PRODUCT_FETCHING_FAILS");
 const REMOVE_ITEM_FROM_CART = createAction("REMOVE_ITEM_FROM_CART");
 const SET_PRICES = createAction("SET_PRICES");
 const SAVE_SHIPPING_DATA = createAction("SAVE_SHIPPING_DATA");
 const SAVE_PAYMENT_METHOD = createAction("SAVE_PAYMENT_METHOD");
+const RESET_CART = createAction("RESET_CART");
 
 export const addItem = (productId, quantity) => async (dispatch, getState) => {
 	try {
@@ -20,7 +21,7 @@ export const addItem = (productId, quantity) => async (dispatch, getState) => {
 			...data,
 			quantity: Number(quantity),
 		};
-		dispatch(ADD_ITEM_TO_CART(item));
+		dispatch(PRODUCT_FETCHING_SUCCESS(item));
 		localStorage.setItem("cart", JSON.stringify(getState().cart.cartItems));
 	} catch (ex) {
 		dispatch(
@@ -69,6 +70,13 @@ export const setPrices = () => (dispatch, getState) => {
 	dispatch(SET_PRICES(prices));
 };
 
+export const resetCart = () => dispatch => {
+	dispatch(RESET_CART());
+	localStorage.removeItem("cart");
+	localStorage.removeItem("shippingData");
+	localStorage.removeItem("paymentMethod");
+};
+
 //REDUCER
 const initialState = {
 	cartItems: localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],
@@ -88,7 +96,7 @@ export default function cartReducer(state = initialState, action) {
 	switch (action.type) {
 		case PRODUCT_FETCHING_START.type:
 			return { ...state, loading: true, error: null };
-		case ADD_ITEM_TO_CART.type:
+		case PRODUCT_FETCHING_SUCCESS.type:
 			const newItem = action.payload;
 			const sameItemAlreadyOnCart = state.cartItems.find(
 				item => item._id === newItem._id
@@ -118,15 +126,11 @@ export default function cartReducer(state = initialState, action) {
 			const { itemsPrice, shippingPrice, taxPrice, totalPrice } = action.payload;
 			return { ...state, itemsPrice, shippingPrice, taxPrice, totalPrice };
 		case SAVE_SHIPPING_DATA.type:
-			return {
-				...state,
-				shippingData: action.payload,
-			};
+			return { ...state, shippingData: action.payload };
 		case SAVE_PAYMENT_METHOD.type:
-			return {
-				...state,
-				paymentMethod: action.payload,
-			};
+			return { ...state, paymentMethod: action.payload };
+		case RESET_CART.type:
+			return { initialState };
 		default:
 			return state;
 	}
