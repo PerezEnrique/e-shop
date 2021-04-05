@@ -20,10 +20,10 @@ function PaymentPage({ history }) {
 	};
 
 	return (
-		<main className="container" role="main">
+		<div className="container">
 			<CheckoutSteps step1 step2 step3 />
 			<h1>Payment method</h1>
-			<section>
+			<main role="main">
 				<form className="mt-3" onSubmit={handleSubmit}>
 					<div className="form-group">
 						<div className="form-check">
@@ -47,8 +47,8 @@ function PaymentPage({ history }) {
 						</button>
 					</div>
 				</form>
-			</section>
-		</main>
+			</main>
+		</div>
 	);
 }
 

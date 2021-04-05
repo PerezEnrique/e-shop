@@ -26,9 +26,9 @@ function EditUserStatus({ match, history }) {
 	};
 
 	return (
-		<main className="container" role="main">
+		<div className="container">
 			<Link to="/admin/users-list">Go back</Link>
-			<section className="row justify-content-center">
+			<main className="row justify-content-center" role="main">
 				<div className="col-10 mt-1">
 					<h1 className="h2">Edit user</h1>
 					{loading ? (
@@ -63,8 +63,8 @@ function EditUserStatus({ match, history }) {
 						</form>
 					)}
 				</div>
-			</section>
-		</main>
+			</main>
+		</div>
 	);
 }
 

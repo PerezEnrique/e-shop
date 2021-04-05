@@ -37,10 +37,10 @@ function ShippingPage({ history }) {
 	};
 
 	return (
-		<main className="container text-center" role="main">
+		<div className="container text-center">
 			<CheckoutSteps step1 step2 />
 			<h1>Shipping</h1>
-			<section className="row justify-content-center">
+			<main className="row justify-content-center" role="main">
 				<div className="card col-10 col-md-6 mt-4">
 					<div className="card-body text-left">
 						<form onSubmit={handleSubmit}>
@@ -116,8 +116,8 @@ function ShippingPage({ history }) {
 						</form>
 					</div>
 				</div>
-			</section>
-		</main>
+			</main>
+		</div>
 	);
 }
 
