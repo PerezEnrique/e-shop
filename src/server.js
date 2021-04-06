@@ -3,6 +3,7 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 const connectDB = require("./config/db");
+const path = require("path");
 const userRoutes = require("./routes/userRoutes");
 const productsRoutes = require("./routes/productsRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
@@ -15,6 +16,7 @@ if (!process.env.JWT_PRIVATE_KEY) {
 const port = process.env.PORT || 5000;
 connectDB();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.use("/user", userRoutes);
 app.use("/products", productsRoutes);

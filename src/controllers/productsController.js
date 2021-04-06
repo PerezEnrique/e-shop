@@ -37,12 +37,12 @@ async function createProduct(req, res) {
 		name,
 		user: req.user._id,
 		brand,
-		image,
 		price,
 		description,
 		countInStock,
 	});
 
+	newProduct.image = newProduct.setImgUrl(req.file.filename);
 	const createdProduct = await newProduct.save();
 	return res.status(201).json({ success: true, data: createdProduct });
 }
