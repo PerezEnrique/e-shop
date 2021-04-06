@@ -4,7 +4,7 @@ import { updateProfile } from "../state_management/userState";
 import { getUserOrders } from "../state_management/orderState";
 import OrderRow from "../components/OrderRow";
 import { objectIsEmpty } from "../utils/helpers";
-import { validateDataToUpdate } from "../utils/validation";
+import { validateUserUpdate } from "../utils/validation";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
@@ -38,7 +38,7 @@ function ProfilePage() {
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateDataToUpdate(userData);
+		const errorsFromValidation = validateUserUpdate(userData);
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {

@@ -76,8 +76,10 @@ export const createProduct = productData => async dispatch => {
 export const updateProduct = (productId, updatedData) => async dispatch => {
 	try {
 		dispatch(UPDATE_PRODUCT_REQUEST());
-		await http.put(`/products/${productId}/update`, updatedData);
-		dispatch(UPDATE_PRODUCT_SUCCESS());
+		const {
+			data: { data },
+		} = await http.put(`/products/${productId}/update`, updatedData);
+		dispatch(UPDATE_PRODUCT_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
 			UPDATE_PRODUCT_FAILS(
@@ -153,7 +155,12 @@ export default function productReducer(state = initialState, action) {
 		case UPDATE_PRODUCT_REQUEST.type:
 			return { ...state, loading: true, error: null };
 		case UPDATE_PRODUCT_SUCCESS.type:
-			return { ...state, loading: false, successfulUpdate: true };
+			return {
+				...state,
+				singleProduct: action.payload,
+				loading: false,
+				successfulUpdate: true,
+			};
 		case UPDATE_PRODUCT_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case UPDATE_PRODUCT_RESET.type:

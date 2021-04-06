@@ -27,7 +27,7 @@ async function getSingleProduct(req, res) {
 //access: private (and only for admins)
 //desc: creates a new product
 async function createProduct(req, res) {
-	const { name, brand, image, price, description, countInStock } = req.body;
+	const { name, brand, price, description, countInStock } = req.body;
 
 	const validationError = validateProductData(req.body);
 	if (validationError)
@@ -51,23 +51,30 @@ async function createProduct(req, res) {
 //access: private (and only for admins)
 //desc: updates a product
 async function updateProduct(req, res) {
-	const { name, brand, image, price, description, countInStock } = req.body;
+	const { name, brand, price, description, countInStock } = req.body;
 
 	const validationError = validateProductData(req.body);
 	if (validationError)
 		return res.status(400).json({ success: false, errorMessage: validationError });
 
-	const product = await Product.findByIdAndUpdate(
-		req.params.id,
-		{ name, brand, image, price, description, countInStock },
-		{ new: true, useFindAndModify: false }
-	);
+	const product = await Product.findById(req.params.id);
 	if (!product)
 		return res
 			.status(404)
 			.json({ success: false, errorMessage: "Couldn't find a product with provided Id" });
 
-	return res.status(201).json({ success: true, data: product });
+	product.name = name;
+	product.brand = brand;
+	product.price = price;
+	product.description = description;
+	product.countInStock = countInStock;
+
+	if (req.file) {
+		product.image = product.setImgUrl(req.file.filename);
+	}
+
+	const updatedProduct = await product.save();
+	return res.status(201).json({ success: true, data: updatedProduct });
 }
 
 //route: DELETE /products/:id

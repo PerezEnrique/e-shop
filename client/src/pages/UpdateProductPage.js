@@ -6,7 +6,7 @@ import {
 	resetProductUpdateProcess,
 	fetchSingleProduct,
 } from "../state_management/productsState";
-import { validateProductData } from "../utils/validation";
+import { validateProductUpdate } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
@@ -19,28 +19,28 @@ function UpdateProductPage({ history, match }) {
 		name: "",
 		brand: "",
 		price: 0,
+		image: {},
 		description: "",
 		countInStock: 0,
 	});
 
 	const [validationErrors, setValidationErrors] = useState({});
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		if (successfulUpdate) {
 			dispatch(resetProductUpdateProcess());
 			history.push(`/admin/products-list`);
 		} else {
-			if (objectIsEmpty(singleProduct)) {
+			if (objectIsEmpty(singleProduct) || singleProduct._id !== match.params.id) {
 				dispatch(fetchSingleProduct(match.params.id));
 			} else {
-				setProductData({
-					name: singleProduct.name,
-					brand: singleProduct.brand,
-					price: singleProduct.price,
-					description: singleProduct.description,
-					countInStock: singleProduct.countInStock,
-				});
+				const data = { ...productData };
+				data.name = singleProduct.name;
+				data.brand = singleProduct.brand;
+				data.price = singleProduct.price;
+				data.description = singleProduct.description;
+				data.countInStock = singleProduct.countInStock;
+				setProductData(data);
 			}
 		}
 	}, [successfulUpdate, dispatch, history, match.params.id, singleProduct]);
@@ -49,17 +49,32 @@ function UpdateProductPage({ history, match }) {
 		setValidationErrors({});
 		const { name, value } = e.currentTarget;
 		const data = { ...productData };
-		data[name] = value;
-		setProductData(data);
+		if (name === "image") {
+			data[name] = e.currentTarget.files[0];
+			setProductData(data);
+		} else {
+			data[name] = value;
+			setProductData(data);
+		}
 	};
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateProductData(productData);
+		const errorsFromValidation = validateProductUpdate(productData);
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			dispatch(updateProduct(singleProduct._id, productData));
+			const { name, brand, price, image, description, countInStock } = productData;
+			const formData = new FormData();
+			formData.append("name", name);
+			formData.append("brand", brand);
+			formData.append("price", price);
+			formData.append("description", description);
+			formData.append("countInStock", countInStock);
+			if (image.name) {
+				formData.append("image", image);
+			}
+			dispatch(updateProduct(singleProduct._id, formData));
 		}
 	};
 
@@ -151,6 +166,22 @@ function UpdateProductPage({ history, match }) {
 									/>
 									{validationErrors.countInStock && (
 										<Alert type="danger" message={validationErrors.countInStock} />
+									)}
+								</div>
+								<div className="form-group">
+									<label htmlFor="image">
+										Product image (Ignore this field if you want to keep the current
+										image)
+									</label>
+									<input
+										className="form-control-file"
+										type="file"
+										id="image"
+										name="image"
+										onChange={handleChange}
+									/>
+									{validationErrors.image && (
+										<Alert type="danger" message={validationErrors.image} />
 									)}
 								</div>
 								{error && <Alert type="danger" message={error} />}

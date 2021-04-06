@@ -40,7 +40,7 @@ export function validateLogIn(userData) {
 	return errors;
 }
 
-export function validateDataToUpdate(userData) {
+export function validateUserUpdate(userData) {
 	const schema = Joi.object({
 		email: Joi.string().email().required().label("Email"),
 		name: Joi.string().required().label("Name"),
@@ -87,6 +87,27 @@ export function validateProductData(productData) {
 		name: Joi.string().required().label("Name"),
 		brand: Joi.string().required().label("Brand"),
 		image: Joi.object().required().label("Image"),
+		price: Joi.number().required().min(0).label("Price"),
+		description: Joi.string().required().label("Description"),
+		countInStock: Joi.number().required().min(0).label("Count in stock"),
+	});
+
+	const errors = {};
+	const { error } = schema.validate(productData, { abortEarly: false });
+	if (error) {
+		for (let item of error.details) {
+			errors[item.path[0]] = item.message;
+		}
+	}
+
+	return errors;
+}
+
+export function validateProductUpdate(productData) {
+	const schema = Joi.object({
+		name: Joi.string().required().label("Name"),
+		brand: Joi.string().required().label("Brand"),
+		image: Joi.object().label("Image"),
 		price: Joi.number().required().min(0).label("Price"),
 		description: Joi.string().required().label("Description"),
 		countInStock: Joi.number().required().min(0).label("Count in stock"),
