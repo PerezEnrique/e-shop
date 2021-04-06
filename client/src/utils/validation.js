@@ -86,7 +86,7 @@ export function validateProductData(productData) {
 	const schema = Joi.object({
 		name: Joi.string().required().label("Name"),
 		brand: Joi.string().required().label("Brand"),
-		image: Joi.string().label("Image"),
+		image: Joi.object().required().label("Image"),
 		price: Joi.number().required().min(0).label("Price"),
 		description: Joi.string().required().label("Description"),
 		countInStock: Joi.number().required().min(0).label("Count in stock"),

@@ -16,6 +16,7 @@ function CreateProductPage({ history }) {
 		name: "",
 		brand: "",
 		price: 0,
+		image: {},
 		description: "",
 		countInStock: 0,
 	});
@@ -33,8 +34,13 @@ function CreateProductPage({ history }) {
 		setValidationErrors({});
 		const { name, value } = e.currentTarget;
 		const data = { ...productData };
-		data[name] = value;
-		setProductData(data);
+		if (name === "image") {
+			data[name] = e.currentTarget.files[0];
+			setProductData(data);
+		} else {
+			data[name] = value;
+			setProductData(data);
+		}
 	};
 
 	const handleSubmit = e => {
@@ -43,7 +49,15 @@ function CreateProductPage({ history }) {
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			dispatch(createProduct(productData));
+			const { name, brand, price, image, description, countInStock } = productData;
+			const formData = new FormData();
+			formData.append("name", name);
+			formData.append("brand", brand);
+			formData.append("price", price);
+			formData.append("image", image);
+			formData.append("description", description);
+			formData.append("countInStock", countInStock);
+			dispatch(createProduct(formData));
 		}
 	};
 
@@ -56,7 +70,7 @@ function CreateProductPage({ history }) {
 				<section className="row justify-content-center">
 					<div className="card col-10 col-md-6 mt-4">
 						<div className="card-body text-left">
-							<form onSubmit={handleSubmit}>
+							<form onSubmit={handleSubmit} id="productForm">
 								<div className="form-group">
 									<label htmlFor="name">Name</label>
 									<input
@@ -135,6 +149,20 @@ function CreateProductPage({ history }) {
 									/>
 									{validationErrors.countInStock && (
 										<Alert type="danger" message={validationErrors.countInStock} />
+									)}
+								</div>
+								<div className="form-group">
+									<label htmlFor="image">Product image</label>
+									<input
+										className="form-control-file"
+										type="file"
+										id="image"
+										name="image"
+										onChange={handleChange}
+										required
+									/>
+									{validationErrors.image && (
+										<Alert type="danger" message={validationErrors.image} />
 									)}
 								</div>
 								{error && <Alert type="danger" message={error} />}
