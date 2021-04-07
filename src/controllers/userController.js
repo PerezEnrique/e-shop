@@ -3,7 +3,7 @@ const User = require("../models/User");
 const {
 	validateSignUp,
 	validateLogIn,
-	validateUpdatedData,
+	validateUserUpdate,
 	validateStatusValue,
 } = require("../utils/validation");
 const prepareDataForClient = require("../utils/helpers").prepareDataForClient;
@@ -72,7 +72,7 @@ async function authenticateUser(req, res) {
 //desc: update user's profile
 async function updateUserProfile(req, res) {
 	const { email, name, password } = req.body;
-	const validationError = validateUpdatedData(req.body);
+	const validationError = validateUserUpdate(req.body);
 	if (validationError)
 		return res.status(400).json({ success: false, errorMessage: validationError });
 
