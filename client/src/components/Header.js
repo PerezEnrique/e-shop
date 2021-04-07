@@ -5,7 +5,7 @@ import { IconContext } from "react-icons";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 
 function Header() {
-	const { currentUser } = useSelector(state => state.user);
+	const { currentUser } = useSelector(state => state.users);
 	const { cartItems } = useSelector(state => state.cart);
 
 	return (

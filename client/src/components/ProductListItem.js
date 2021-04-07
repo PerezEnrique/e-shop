@@ -11,7 +11,7 @@ function ProductListItem({ item }) {
 					<img className="img-fluid rounded" src={image} alt={name} />
 				</div>
 				<div className="col-md-6">
-					<Link className="text-decoration-none text-dark" to={`/product/${_id}`}>
+					<Link className="text-decoration-none text-dark" to={`/products/${_id}`}>
 						{name}
 					</Link>
 				</div>

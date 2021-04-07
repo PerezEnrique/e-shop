@@ -1,5 +1,38 @@
 const Order = require("../models/Order");
 
+// route: GET /orders
+//access: private (and only for admins)
+//desc: returns all the orders
+async function getOrders(req, res) {
+	const orders = await Order.find({}).populate("user", ["email", "name"]);
+	return res.status(200).json({ success: true, data: orders });
+}
+
+// route: GET /orders/:id
+//access: private
+//desc: returns the desired order
+async function getOrder(req, res) {
+	const order = await Order.findById(req.params.id).populate("user", ["email", "name"]);
+
+	if (!order) {
+		return res.status(404).json({
+			success: false,
+			errorMessage: "Couldn't find order with the provided id",
+		});
+	}
+
+	return res.status(200).json({ success: true, data: order });
+}
+
+// route: GET /orders/my-orders
+//access: private
+//desc: get current user's orders
+async function getUserOrders(req, res) {
+	const orders = await Order.find({ user: req.user._id });
+
+	return res.status(200).json({ success: true, data: orders });
+}
+
 // route: POST /orders
 //access: private
 //desc: creates a new order
@@ -31,31 +64,6 @@ async function createOrder(req, res) {
 	return res.status(201).json({ success: true, data: createdOrder });
 }
 
-// route: GET /orders
-//access: private
-//desc: returns the desired order
-async function getOrder(req, res) {
-	const order = await Order.findById(req.params.id).populate("user", ["email", "name"]);
-
-	if (!order) {
-		return res.status(404).json({
-			success: false,
-			errorMessage: "Couldn't find order with the provided id",
-		});
-	}
-
-	return res.status(200).json({ success: true, data: order });
-}
-
-// route: GET /orders/my-orders
-//access: private
-//desc: get current user's orders
-async function getUserOrders(req, res) {
-	const orders = await Order.find({ user: req.user._id });
-
-	return res.status(200).json({ success: true, data: orders });
-}
-
 // route: PUT /orders/:id/pay
 //access: private
 //desc: update order to paid
@@ -81,4 +89,4 @@ async function updateOrderToPaid(req, res) {
 	return res.status(201).json({ success: true, data: updatedOrder });
 }
 
-module.exports = { createOrder, getOrder, getUserOrders, updateOrderToPaid };
+module.exports = { createOrder, getOrders, getOrder, getUserOrders, updateOrderToPaid };

@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userState";
+import userReducer from "./usersState";
 import productsReducer from "./productsState";
 import cartReducer from "./cartState";
-import orderReducer from "./orderState";
+import orderReducer from "./ordersState";
 
 const reducers = {
-	user: userReducer,
+	users: userReducer,
 	products: productsReducer,
 	cart: cartReducer,
-	order: orderReducer,
+	orders: orderReducer,
 };
 
 export default function generateStore() {

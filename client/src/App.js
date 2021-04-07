@@ -18,6 +18,7 @@ import EditUserStatusPage from "./pages/EditUserStatusPage";
 import ProductListPage from "./pages/ProductListPage";
 import CreateProductPage from "./pages/CreateProductPage";
 import UpdateProductPage from "./pages/UpdateProductPage";
+import OrderListPage from "./pages/OrdersListPage";
 import PageNotFound from "./pages/PageNotFound";
 import NotAuthorized from "./pages/NotAuthorized";
 
@@ -32,13 +33,14 @@ function App() {
 				/>
 				<PrivateRoute path="/admin/create-product" component={CreateProductPage} />
 				<PrivateRoute path="/admin/products-list" component={ProductListPage} />
+				<PrivateRoute path="/admin/orders-list" component={OrderListPage} />
 				<PrivateRoute path="/admin/users-list" component={UsersListPage} />
 				<PrivateRoute path="/admin/products/:id/update" component={UpdateProductPage} />
-				<Route path="/product/:id" component={SingleProduct} />
+				<Route path="/products/:id" component={SingleProduct} />
+				<PrivateRoute path="/orders/:id" component={OrderPage} />
 				<PrivateRoute path="/shipping" component={ShippingPage} />
 				<PrivateRoute path="/placeorder" component={PlaceOrderPage} />
 				<PrivateRoute path="/payment" component={PaymentPage} />
-				<PrivateRoute path="/order/:id" component={OrderPage} />
 				<AuthenticationRoute path="/sign-up" component={SignupPage} />
 				<Route path="/log-out" component={LogOutPage} />
 				<AuthenticationRoute path="/log-in" component={LogInPage} />

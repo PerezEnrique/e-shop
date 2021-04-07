@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 export function AuthenticationRoute({ component: Component, ...rest }) {
-	const { currentUser } = useSelector(state => state.user);
+	const { currentUser } = useSelector(state => state.users);
 
 	return (
 		<Route
@@ -21,7 +21,7 @@ export function AuthenticationRoute({ component: Component, ...rest }) {
 }
 
 export function PrivateRoute({ component: Component, ...rest }) {
-	const { currentUser } = useSelector(state => state.user);
+	const { currentUser } = useSelector(state => state.users);
 
 	return (
 		<Route

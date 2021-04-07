@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserList } from "../state_management/userState";
+import { fetchUsers } from "../state_management/usersState";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
-function UsersList({ history }) {
-	const { currentUser, usersList, loading, error } = useSelector(state => state.user);
+function UsersListPage({ history }) {
+	const { currentUser, users, loading, error } = useSelector(state => state.users);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		if (currentUser && currentUser.isAdmin) {
-			dispatch(getUserList());
+			dispatch(fetchUsers());
 		} else {
 			history.push("/not-authorized");
 		}
@@ -36,7 +36,7 @@ function UsersList({ history }) {
 							</tr>
 						</thead>
 						<tbody>
-							{usersList.map(user => (
+							{users.map(user => (
 								<tr key={user._id}>
 									<td headers="id">{user._id}</td>
 									<td headers="name">{user.name}</td>
@@ -68,4 +68,4 @@ function UsersList({ history }) {
 	);
 }
 
-export default UsersList;
+export default UsersListPage;

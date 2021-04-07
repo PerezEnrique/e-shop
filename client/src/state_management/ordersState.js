@@ -7,6 +7,9 @@ const CREATE_ORDER_FAILS = createAction("CREATE_ORDER_FAILS");
 const ORDER_FETCHING_REQUEST = createAction("ORDER_FETCHING_REQUEST");
 const ORDER_FETCHING_SUCCESS = createAction("ORDER_FETCHING_SUCCESS");
 const ORDER_FETCHING_FAILS = createAction("ORDER_FETCHING_FAILS");
+const ORDERS_FETCHING_REQUEST = createAction("ORDERS_FETCHING_REQUEST");
+const ORDERS_FETCHING_SUCCESS = createAction("ORDERS_FETCHING_SUCCESS");
+const ORDERS_FETCHING_FAILS = createAction("ORDERS_FETCHING_FAILS");
 const USER_ORDERS_FETCHING_REQUEST = createAction("USER_ORDERS_FETCHING_REQUEST");
 const USER_ORDERS_FETCHING_SUCCESS = createAction("USER_ORDERS_FETCHING_SUCCESS");
 const USER_ORDERS_FETCHING_FAILS = createAction("USER_ORDERS_FETCHING_FAILS");
@@ -15,25 +18,26 @@ const ORDER_PAY_SUCCESS = createAction("ORDER_PAY_SUCCESS");
 const ORDER_PAY_FAILS = createAction("ORDER_PAY_FAILS");
 const ORDER_PAY_RESET = createAction("ORDER_PAY_RESET");
 
-export const createOrder = order => async dispatch => {
+export const fetchOrders = () => async dispatch => {
 	try {
-		dispatch(CREATE_ORDER_REQUEST());
+		dispatch(ORDERS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.post("/orders", order);
-		dispatch(CREATE_ORDER_SUCCESS(data));
+		} = await http.get("/orders");
+		console.log(data);
+		dispatch(ORDERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
-			CREATE_ORDER_FAILS(
+			ORDERS_FETCHING_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
-					: `Error ocurred. ${ex.message}` //We cannot just use ex.message because that's taken as not handled
+					: `Error ocurred. ${ex.message}`
 			)
 		);
 	}
 };
 
-export const getOrder = orderId => async dispatch => {
+export const fetchOrder = orderId => async dispatch => {
 	try {
 		dispatch(ORDER_FETCHING_REQUEST());
 		const {
@@ -51,7 +55,7 @@ export const getOrder = orderId => async dispatch => {
 	}
 };
 
-export const getUserOrders = () => async dispatch => {
+export const fetchUserOrders = () => async dispatch => {
 	try {
 		dispatch(USER_ORDERS_FETCHING_REQUEST());
 		const {
@@ -64,6 +68,24 @@ export const getUserOrders = () => async dispatch => {
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
 					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
+export const createOrder = order => async dispatch => {
+	try {
+		dispatch(CREATE_ORDER_REQUEST());
+		const {
+			data: { data },
+		} = await http.post("/orders", order);
+		dispatch(CREATE_ORDER_SUCCESS(data));
+	} catch (ex) {
+		dispatch(
+			CREATE_ORDER_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}` //We cannot just use ex.message because that's taken as not handled
 			)
 		);
 	}
@@ -92,6 +114,7 @@ export const resetOrderPaymentProcess = () => dispatch => {
 };
 
 const initialState = {
+	orders: [],
 	currentOrder: {
 		user: {},
 		orderItems: [],
@@ -122,6 +145,12 @@ export default function orderReducer(state = initialState, action) {
 		case ORDER_FETCHING_SUCCESS.type:
 			return { ...state, currentOrder: action.payload, loading: false };
 		case ORDER_FETCHING_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case ORDERS_FETCHING_REQUEST.type:
+			return { ...state, loading: true, error: null };
+		case ORDERS_FETCHING_SUCCESS.type:
+			return { ...state, orders: action.payload, loading: false };
+		case ORDERS_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case USER_ORDERS_FETCHING_REQUEST.type:
 			return { ...state, loading: true, error: null };

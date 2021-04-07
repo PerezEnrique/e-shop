@@ -13,9 +13,9 @@ const USER_LOGOUT = createAction("USER_LOGOUT");
 const USER_UPDATE_PROFILE_REQUEST = createAction("USER_UPDATE_PROFILE_REQUEST");
 const USER_UPDATE_PROFILE_SUCCESS = createAction("USER_UPDATE_PROFILE_SUCCESS");
 const USER_UPDATE_PROFILE_FAILS = createAction("USER_UPDATE_PROFILE_FAILS");
-const LIST_USERS_REQUEST = createAction("LIST_USERS_REQUEST");
-const LIST_USERS_SUCCESS = createAction("LIST_USERS_SUCCESS");
-const LIST_USERS_FAILS = createAction("LIST_USERS_FAILS");
+const USERS_FETCHING_REQUEST = createAction("USERS_FETCHING_REQUEST");
+const USERS_FETCHING_SUCCESS = createAction("USERS_FETCHING_SUCCESS");
+const USERS_FETCHING_FAILS = createAction("USERS_FETCHING_FAILS");
 const EDIT_ADMIN_STATUS_REQUEST = createAction("EDIT_ADMIN_STATUS_REQUEST");
 const EDIT_ADMIN_STATUS_SUCCESS = createAction("EDIT_ADMIN_STATUS_SUCCESS");
 const EDIT_ADMIN_STATUS_FAILS = createAction("EDIT_ADMIN_STATUS_FAILS");
@@ -94,16 +94,16 @@ export const updateProfile = dataToUpdate => async dispatch => {
 	}
 };
 
-export const getUserList = () => async dispatch => {
+export const fetchUsers = () => async dispatch => {
 	try {
-		dispatch(LIST_USERS_REQUEST());
+		dispatch(USERS_FETCHING_REQUEST());
 		const {
 			data: { data },
 		} = await http.get("/user/admin/get-users");
-		dispatch(LIST_USERS_SUCCESS(data));
+		dispatch(USERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
-			LIST_USERS_FAILS(
+			USERS_FETCHING_FAILS(
 				ex.response && ex.response.data.errorMessage
 					? ex.response.data.errorMessage
 					: `Error ocurred. ${ex.message}`
@@ -138,7 +138,7 @@ const initialState = {
 		: null,
 	loading: false,
 	successfulUpdate: false,
-	usersList: [],
+	users: [],
 	error: null,
 };
 
@@ -169,11 +169,11 @@ export default function userReducer(state = initialState, action) {
 			};
 		case USER_UPDATE_PROFILE_FAILS.type:
 			return { ...state, loading: false, successfulUpdate: false, error: action.payload };
-		case LIST_USERS_REQUEST.type:
+		case USERS_FETCHING_REQUEST.type:
 			return { ...state, loading: true, error: null };
-		case LIST_USERS_SUCCESS.type:
-			return { ...state, usersList: action.payload, loading: false };
-		case LIST_USERS_FAILS.type:
+		case USERS_FETCHING_SUCCESS.type:
+			return { ...state, users: action.payload, loading: false };
+		case USERS_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case EDIT_ADMIN_STATUS_REQUEST.type:
 			return { ...state, loading: true, successfulUpdate: false, error: null };

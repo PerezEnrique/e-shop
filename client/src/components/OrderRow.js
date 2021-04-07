@@ -24,7 +24,7 @@ function OrderRow({
 				</td>
 			)}
 			<td>
-				<Link className="btn btn-sm btn-light " to={`/order/${_id}`}>
+				<Link className="btn btn-sm btn-light " to={`/orders/${_id}`}>
 					Details
 				</Link>
 			</td>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { logOut } from "../state_management/userState";
+import { logOut } from "../state_management/usersState";
 
 function LogOutPage() {
 	const dispatch = useDispatch();

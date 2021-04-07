@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateProfile } from "../state_management/userState";
-import { getUserOrders } from "../state_management/orderState";
+import { updateProfile } from "../state_management/usersState";
+import { fetchUserOrders } from "../state_management/ordersState";
 import OrderRow from "../components/OrderRow";
 import { objectIsEmpty } from "../utils/helpers";
 import { validateUserUpdate } from "../utils/validation";
@@ -10,10 +10,10 @@ import Alert from "../components/Alert";
 
 function ProfilePage() {
 	const { currentUser, loading, error, successfulUpdate } = useSelector(
-		state => state.user
+		state => state.users
 	);
 	const { userOrders, loading: loadingOrders, error: ordersError } = useSelector(
-		state => state.order
+		state => state.orders
 	);
 	const [email, setEmail] = useState(currentUser.email);
 	const [name, setName] = useState(currentUser.name);
@@ -23,7 +23,7 @@ function ProfilePage() {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(getUserOrders());
+		dispatch(fetchUserOrders());
 	}, [dispatch]);
 
 	const handleSubmit = e => {

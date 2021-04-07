@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { signUp } from "../state_management/userState";
+import { signUp } from "../state_management/usersState";
 import { objectIsEmpty } from "../utils/helpers";
 import { validateSignUp } from "../utils/validation";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function SignUpPage({ location }) {
-	const { loading, error } = useSelector(state => state.user);
+	const { loading, error } = useSelector(state => state.users);
 	const dispatch = useDispatch();
 
 	const [email, setEmail] = useState("");

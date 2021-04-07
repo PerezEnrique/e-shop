@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { editUserAdminStatus, resetUpdateProcess } from "../state_management/userState";
+import { editUserAdminStatus, resetUpdateProcess } from "../state_management/usersState";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function EditUserStatus({ match, history }) {
 	const { usersList, successfulUpdate, loading, error } = useSelector(
-		state => state.user
+		state => state.users
 	);
 	const user = usersList.find(user => user._id === match.params.id);
 	const [isAdmin, setIsAdmin] = useState(user.isAdmin);

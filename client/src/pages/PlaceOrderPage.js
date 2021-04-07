@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setPrices } from "../state_management/cartState";
-import { createOrder } from "../state_management/orderState";
+import { createOrder } from "../state_management/ordersState";
 import CheckoutSteps from "../components/CheckoutSteps";
 import ProductListItem from "../components/ProductListItem";
 import Alert from "../components/Alert";
@@ -16,13 +16,13 @@ function PlaceOrderPage({ history }) {
 		shippingData,
 		paymentMethod,
 	} = useSelector(state => state.cart);
-	const { currentOrder, successfulCreation, error } = useSelector(state => state.order);
+	const { currentOrder, successfulCreation, error } = useSelector(state => state.orders);
 	const { address, city, postalCode, country } = shippingData;
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (successfulCreation) {
-			history.push(`order/${currentOrder._id}`);
+			history.push(`orders/${currentOrder._id}`);
 		}
 	}, [successfulCreation, history, currentOrder._id]);
 

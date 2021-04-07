@@ -10,7 +10,7 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function ProductList({ history }) {
-	const { currentUser } = useSelector(state => state.user);
+	const { currentUser } = useSelector(state => state.users);
 	const { products, loading, successfulDeletion, error } = useSelector(
 		state => state.products
 	);

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { logIn } from "../state_management/userState";
+import { logIn } from "../state_management/usersState";
 import Spinner from "../components/Spinner";
 import { validateLogIn } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
 import Alert from "../components/Alert";
 
 function LogInPage({ location }) {
-	const { loading, error } = useSelector(state => state.user);
+	const { loading, error } = useSelector(state => state.users);
 	const dispatch = useDispatch();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");

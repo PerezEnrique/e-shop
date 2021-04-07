@@ -4,17 +4,17 @@ import { resetCart } from "../state_management/cartState";
 import { PayPalButton } from "react-paypal-button-v2";
 import http from "../services/httpServices";
 import {
-	getOrder,
+	fetchOrder,
 	payOrder,
 	resetOrderPaymentProcess,
-} from "../state_management/orderState";
+} from "../state_management/ordersState";
 import ProductListItem from "../components/ProductListItem";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function OrderPage({ match }) {
 	const { currentOrder, loading, successfulPayment, error } = useSelector(
-		state => state.order
+		state => state.orders
 	);
 	const {
 		_id,
@@ -48,10 +48,14 @@ function OrderPage({ match }) {
 			document.body.appendChild(script);
 		};
 
-		if (currentOrder.orderItems.length < 1 || successfulPayment) {
+		if (
+			currentOrder.orderItems.length < 1 ||
+			successfulPayment ||
+			currentOrder._id !== match.params.id
+		) {
 			dispatch(resetCart());
 			dispatch(resetOrderPaymentProcess());
-			dispatch(getOrder(match.params.id));
+			dispatch(fetchOrder(match.params.id));
 		} else if (!currentOrder.isPaid) {
 			if (!window.paypal) {
 				addPaypalScript();
