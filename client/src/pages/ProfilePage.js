@@ -15,12 +15,10 @@ function ProfilePage() {
 	const { userOrders, loading: loadingOrders, error: ordersError } = useSelector(
 		state => state.order
 	);
-	const [userData, setUserData] = useState({
-		email: currentUser.email,
-		name: currentUser.name,
-		password: "",
-		confirmPassword: "",
-	});
+	const [email, setEmail] = useState(currentUser.email);
+	const [name, setName] = useState(currentUser.name);
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [validationErrors, setValidationErrors] = useState({});
 	const dispatch = useDispatch();
 
@@ -28,33 +26,22 @@ function ProfilePage() {
 		dispatch(getUserOrders());
 	}, [dispatch]);
 
-	const handleChange = e => {
-		setValidationErrors({});
-		const { name, value } = e.currentTarget;
-		const data = { ...userData };
-		data[name] = value;
-		setUserData(data);
-	};
-
 	const handleSubmit = e => {
 		e.preventDefault();
+		let userData = {};
+		if (!password || password === "") {
+			userData = { email, name };
+		} else {
+			userData = { email, name, password };
+		}
 		const errorsFromValidation = validateUserUpdate(userData);
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			const { email, name, password } = userData;
-			let dataToUpdate = {};
-			if (!password || password === "") {
-				dataToUpdate = { email, name };
-			} else {
-				dataToUpdate = { email, name, password };
-			}
-			dispatch(updateProfile(dataToUpdate));
+			dispatch(updateProfile(userData));
 			// To clean the fields after submition
-			const data = userData;
-			data.password = "";
-			data.confirmPassword = "";
-			setUserData(data);
+			setPassword("");
+			setConfirmPassword("");
 		}
 	};
 
@@ -73,8 +60,8 @@ function ProfilePage() {
 									type="email"
 									id="email"
 									name="email"
-									value={userData.email}
-									onChange={handleChange}
+									value={email}
+									onChange={e => setEmail(e.currentTarget.value)}
 									placeholder="Enter email"
 									required
 								/>
@@ -83,14 +70,14 @@ function ProfilePage() {
 								)}
 							</div>
 							<div className="form-group">
-								<label htmlFor="name">Email</label>
+								<label htmlFor="name">Name</label>
 								<input
 									className="form-control"
 									type="text"
 									id="name"
 									name="name"
-									value={userData.name}
-									onChange={handleChange}
+									value={name}
+									onChange={e => setName(e.currentTarget.value)}
 									placeholder="Enter name"
 									required
 								/>
@@ -105,10 +92,9 @@ function ProfilePage() {
 									type="password"
 									id="password"
 									name="password"
-									value={userData.password}
-									onChange={handleChange}
+									value={password}
+									onChange={e => setPassword(e.currentTarget.value)}
 									placeholder="Enter password"
-									required
 								/>
 								{validationErrors.password && (
 									<Alert type="danger" message={validationErrors.password} />
@@ -121,15 +107,15 @@ function ProfilePage() {
 									type="password"
 									id="confirmPassword"
 									name="confirmPassword"
-									value={userData.confirmPassword}
-									onChange={handleChange}
+									value={confirmPassword}
+									onChange={e => setConfirmPassword(e.currentTarget.value)}
 									placeholder="Enter password confirmation"
-									required
 								/>
 								{validationErrors.confirmPassword && (
 									<Alert type="danger" message={validationErrors.confirmPassword} />
 								)}
 							</div>
+
 							{error && <Alert type="danger" message={error} />}
 							{successfulUpdate && (
 								<div className="alert alert-success">Profile successfuly updated</div>

@@ -12,14 +12,12 @@ import Alert from "../components/Alert";
 
 function CreateProductPage({ history }) {
 	const { successfulCreation, loading, error } = useSelector(state => state.products);
-	const [productData, setProductData] = useState({
-		name: "",
-		brand: "",
-		price: 0,
-		image: {},
-		description: "",
-		countInStock: 0,
-	});
+	const [name, setName] = useState("");
+	const [brand, setBrand] = useState("");
+	const [price, setPrice] = useState(0);
+	const [image, setImage] = useState({});
+	const [description, setDescription] = useState("");
+	const [countInStock, setCountInStock] = useState(0);
 	const [validationErrors, setValidationErrors] = useState({});
 	const dispatch = useDispatch();
 
@@ -30,26 +28,19 @@ function CreateProductPage({ history }) {
 		}
 	}, [successfulCreation, dispatch, history]);
 
-	const handleChange = e => {
-		setValidationErrors({});
-		const { name, value } = e.currentTarget;
-		const data = { ...productData };
-		if (name === "image") {
-			data[name] = e.currentTarget.files[0];
-			setProductData(data);
-		} else {
-			data[name] = value;
-			setProductData(data);
-		}
-	};
-
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateProductData(productData);
+		const errorsFromValidation = validateProductData({
+			name,
+			brand,
+			price,
+			image,
+			description,
+			countInStock,
+		});
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			const { name, brand, price, image, description, countInStock } = productData;
 			const formData = new FormData();
 			formData.append("name", name);
 			formData.append("brand", brand);
@@ -78,8 +69,8 @@ function CreateProductPage({ history }) {
 										type="text"
 										id="name"
 										name="name"
-										value={productData.name}
-										onChange={handleChange}
+										value={name}
+										onChange={e => setName(e.currentTarget.value)}
 										placeholder="Enter product name"
 										required
 									/>
@@ -94,8 +85,8 @@ function CreateProductPage({ history }) {
 										type="text"
 										id="brand"
 										name="brand"
-										value={productData.brand}
-										onChange={handleChange}
+										value={brand}
+										onChange={e => setBrand(e.currentTarget.value)}
 										placeholder="Enter product brand"
 										required
 									/>
@@ -111,8 +102,8 @@ function CreateProductPage({ history }) {
 										id="price"
 										name="price"
 										min={0}
-										value={productData.price}
-										onChange={handleChange}
+										value={price}
+										onChange={e => setPrice(e.currentTarget.value)}
 										required
 									/>
 									{validationErrors.price && (
@@ -125,8 +116,8 @@ function CreateProductPage({ history }) {
 										className="form-control"
 										id="description"
 										name="description"
-										value={productData.description}
-										onChange={handleChange}
+										value={description}
+										onChange={e => setDescription(e.currentTarget.value)}
 										row={4}
 										placeholder="Enter product description"
 										required
@@ -143,8 +134,8 @@ function CreateProductPage({ history }) {
 										min={0}
 										id="countInStock"
 										name="countInStock"
-										value={productData.countInStock}
-										onChange={handleChange}
+										value={countInStock}
+										onChange={e => setCountInStock(e.currentTarget.value)}
 										required
 									/>
 									{validationErrors.countInStock && (
@@ -158,7 +149,7 @@ function CreateProductPage({ history }) {
 										type="file"
 										id="image"
 										name="image"
-										onChange={handleChange}
+										onChange={e => setImage(e.currentTarget.files[0])}
 										required
 									/>
 									{validationErrors.image && (

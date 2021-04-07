@@ -10,29 +10,25 @@ import Alert from "../components/Alert";
 function SignUpPage({ location }) {
 	const { loading, error } = useSelector(state => state.user);
 	const dispatch = useDispatch();
-	const [userData, setUserData] = useState({
-		email: "",
-		name: "",
-		password: "",
-		confirmPassword: "",
-	});
-	const [validationErrors, setValidationErrors] = useState({});
 
-	const handleChange = e => {
-		setValidationErrors({});
-		const { name, value } = e.currentTarget;
-		const data = { ...userData };
-		data[name] = value;
-		setUserData(data);
-	};
+	const [email, setEmail] = useState("");
+	const [name, setName] = useState("");
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+	const [validationErrors, setValidationErrors] = useState({});
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateSignUp(userData);
+		const errorsFromValidation = validateSignUp({
+			email,
+			name,
+			password,
+			confirmPassword,
+		});
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			dispatch(signUp(userData));
+			dispatch(signUp({ email, name, password }));
 		}
 	};
 
@@ -51,8 +47,8 @@ function SignUpPage({ location }) {
 									type="email"
 									id="email"
 									name="email"
-									value={userData.email}
-									onChange={handleChange}
+									value={email}
+									onChange={e => setEmail(e.currentTarget.value)}
 									placeholder="Enter email"
 									required
 								/>
@@ -61,14 +57,14 @@ function SignUpPage({ location }) {
 								)}
 							</div>
 							<div className="form-group">
-								<label htmlFor="name">Email</label>
+								<label htmlFor="name">Name</label>
 								<input
 									className="form-control"
 									type="text"
 									id="name"
 									name="name"
-									value={userData.name}
-									onChange={handleChange}
+									value={name}
+									onChange={e => setName(e.currentTarget.value)}
 									placeholder="Enter name"
 									required
 								/>
@@ -83,8 +79,8 @@ function SignUpPage({ location }) {
 									type="password"
 									id="password"
 									name="password"
-									value={userData.password}
-									onChange={handleChange}
+									value={password}
+									onChange={e => setPassword(e.currentTarget.value)}
 									placeholder="Enter password"
 									required
 								/>
@@ -99,8 +95,8 @@ function SignUpPage({ location }) {
 									type="password"
 									id="confirmPassword"
 									name="confirmPassword"
-									value={userData.confirmPassword}
-									onChange={handleChange}
+									value={confirmPassword}
+									onChange={e => setConfirmPassword(e.currentTarget.value)}
 									placeholder="Enter password confirmation"
 									required
 								/>

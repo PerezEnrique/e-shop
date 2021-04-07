@@ -4,34 +4,31 @@ import { saveShippingData } from "../state_management/cartState";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { validateShippingData } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
+import Alert from "../components/Alert";
 
 function ShippingPage({ history }) {
-	const { shippingData: currentData } = useSelector(state => state.cart);
-	const [shippingData, setShippingData] = useState({
-		address: currentData.address,
-		city: currentData.city,
-		postalCode: currentData.postalCode,
-		country: currentData.country,
-	});
+	const { shippingData } = useSelector(state => state.cart);
+
+	const [address, setAddress] = useState(shippingData.address);
+	const [city, setCity] = useState(shippingData.city);
+	const [postalCode, setPostalCode] = useState(shippingData.postalCode);
+	const [country, setCountry] = useState(shippingData.country);
 	const [validationErrors, setValidationErrors] = useState({});
 
 	const dispatch = useDispatch();
 
-	const handleChange = e => {
-		setValidationErrors({});
-		const { name, value } = e.currentTarget;
-		const data = { ...shippingData };
-		data[name] = value;
-		setShippingData(data);
-	};
-
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateShippingData(shippingData);
+		const errorsFromValidation = validateShippingData({
+			address,
+			city,
+			postalCode,
+			country,
+		});
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			dispatch(saveShippingData(shippingData));
+			dispatch(saveShippingData({ address, city, postalCode, country }));
 			history.push("/payment");
 		}
 	};
@@ -51,13 +48,13 @@ function ShippingPage({ history }) {
 									type="text"
 									id="address"
 									name="address"
-									value={shippingData.address}
-									onChange={handleChange}
+									value={address}
+									onChange={e => setAddress(e.currentTarget.value)}
 									placeholder="Enter address"
 									required
 								/>
 								{validationErrors.address && (
-									<div className="alert alert-danger">{validationErrors.address}</div>
+									<Alert type="danger" message={validationErrors.address} />
 								)}
 							</div>
 							<div className="form-group">
@@ -67,13 +64,13 @@ function ShippingPage({ history }) {
 									type="text"
 									id="city"
 									name="city"
-									value={shippingData.city}
-									onChange={handleChange}
+									value={city}
+									onChange={e => setCity(e.currentTarget.value)}
 									placeholder="Enter city"
 									required
 								/>
 								{validationErrors.city && (
-									<div className="alert alert-danger">{validationErrors.city}</div>
+									<Alert type="danger" message={validationErrors.city} />
 								)}
 							</div>
 							<div className="form-group">
@@ -83,13 +80,13 @@ function ShippingPage({ history }) {
 									type="text"
 									id="postalCode"
 									name="postalCode"
-									value={shippingData.postalCode}
-									onChange={handleChange}
+									value={postalCode}
+									onChange={e => setPostalCode(e.currentTarget.value)}
 									placeholder="Enter Postal code"
 									required
 								/>
 								{validationErrors.postalCode && (
-									<div className="alert alert-danger">{validationErrors.postalCode}</div>
+									<Alert type="danger" message={validationErrors.postalCode} />
 								)}
 							</div>
 							<div className="form-group">
@@ -99,13 +96,13 @@ function ShippingPage({ history }) {
 									type="text"
 									id="country"
 									name="country"
-									value={shippingData.country}
-									onChange={handleChange}
+									value={country}
+									onChange={e => setCountry(e.currentTarget.value)}
 									placeholder="Enter country"
 									required
 								/>
 								{validationErrors.country && (
-									<div className="alert alert-danger">{validationErrors.country}</div>
+									<Alert type="danger" message={validationErrors.country} />
 								)}
 							</div>
 							<div className="text-center">

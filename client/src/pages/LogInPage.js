@@ -10,27 +10,17 @@ import Alert from "../components/Alert";
 function LogInPage({ location }) {
 	const { loading, error } = useSelector(state => state.user);
 	const dispatch = useDispatch();
-	const [userData, setUserData] = useState({
-		email: "",
-		password: "",
-	});
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [validationErrors, setValidationErrors] = useState({});
-
-	const handleChange = e => {
-		setValidationErrors({});
-		const { name, value } = e.currentTarget;
-		const data = { ...userData };
-		data[name] = value;
-		setUserData(data);
-	};
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		const errorsFromValidation = validateLogIn(userData);
+		const errorsFromValidation = validateLogIn({ email, password });
 		if (!objectIsEmpty(errorsFromValidation)) {
 			setValidationErrors(errorsFromValidation);
 		} else {
-			dispatch(logIn(userData));
+			dispatch(logIn({ email, password }));
 		}
 	};
 
@@ -50,8 +40,8 @@ function LogInPage({ location }) {
 									type="email"
 									id="email"
 									name="email"
-									value={userData.email}
-									onChange={handleChange}
+									value={email}
+									onChange={e => setEmail(e.currentTarget.value)}
 									placeholder="Enter email"
 									required
 								/>
@@ -66,8 +56,8 @@ function LogInPage({ location }) {
 									type="password"
 									id="password"
 									name="password"
-									value={userData.password}
-									onChange={handleChange}
+									value={password}
+									onChange={e => setPassword(e.currentTarget.value)}
 									placeholder="Enter password"
 									required
 								/>

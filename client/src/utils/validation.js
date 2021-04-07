@@ -56,7 +56,7 @@ export function validateUserUpdate(userData) {
 		}
 	}
 
-	if (userData.confirmPassword !== userData.password) {
+	if (userData.password && userData.confirmPassword !== userData.password) {
 		errors["confirmPassword"] = "Passwords do not match";
 	}
 

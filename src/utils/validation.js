@@ -35,7 +35,7 @@ function validateLogIn(userData) {
 	return validationError;
 }
 
-function validateUpdatedData(userData) {
+function validateUserUpdate(userData) {
 	const schema = Joi.object({
 		email: Joi.string().email().required().label("Email"),
 		name: Joi.string().required().label("Name"),
@@ -83,7 +83,7 @@ function validateProductData(productData) {
 module.exports = {
 	validateSignUp,
 	validateLogIn,
-	validateUpdatedData,
+	validateUserUpdate,
 	validateStatusValue,
 	validateProductData,
 };
