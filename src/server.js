@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const connectDB = require("./config/db");
 const path = require("path");
-const userRoutes = require("./routes/userRoutes");
+const usersRoutes = require("./routes/usersRoutes");
 const productsRoutes = require("./routes/productsRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
 const errorHandler = require("./middlewares/errorHandler");
@@ -18,7 +18,7 @@ connectDB();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
-app.use("/user", userRoutes);
+app.use("/users", usersRoutes);
 app.use("/products", productsRoutes);
 app.use("/orders", ordersRoutes);
 app.use("/config/paypal", (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));

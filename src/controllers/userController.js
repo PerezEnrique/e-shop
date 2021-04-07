@@ -8,7 +8,7 @@ const {
 } = require("../utils/validation");
 const prepareDataForClient = require("../utils/helpers").prepareDataForClient;
 
-//route: POST /user/sign-up
+//route: POST /users/sign-up
 //access: public
 //desc: creates new user
 async function createUser(req, res) {
@@ -37,7 +37,7 @@ async function createUser(req, res) {
 		.json({ success: true, data: dataForClient });
 }
 
-//route: POST /user/log-in
+//route: POST /users/log-in
 //access: public
 //desc: logs user in
 async function authenticateUser(req, res) {
@@ -67,7 +67,7 @@ async function authenticateUser(req, res) {
 		.json({ success: true, data: dataForClient });
 }
 
-//route: PUT /user
+//route: PUT /users
 //access: private
 //desc: update user's profile
 async function updateUserProfile(req, res) {
@@ -100,18 +100,30 @@ async function updateUserProfile(req, res) {
 		.json({ success: true, data: dataForClient });
 }
 
-//route: GET /user/admin/get-users
+//route: GET /users
 //access: private (and only for admins)
 //desc: returns all user
-async function getAllUsers(req, res) {
+async function getUsers(req, res) {
 	const users = await User.find({}).select("-password");
 	return res.status(200).json({ success: true, data: users });
 }
 
-//route: PUT /user/admin/update-user
+//route: GET /users/:id
+//access: private (and only for admins)
+//desc: returns a single user
+async function getUser(req, res) {
+	const user = await User.findById(req.params.id).select("-password");
+	if (!user)
+		return res
+			.status(404)
+			.json({ success: false, errorMessage: "Couldn't find user with the provided id" });
+	return res.status(200).json({ success: true, data: user });
+}
+
+//route: PUT /users/:id/edit-status
 //access: private (and only for admins)
 //desc: edit other user's admin status
-async function editUserAdminStatus(req, res) {
+async function editAdminStatus(req, res) {
 	const { isAdmin } = req.body;
 	const validationError = validateStatusValue(isAdmin);
 	if (validationError)
@@ -135,6 +147,7 @@ module.exports = {
 	createUser,
 	authenticateUser,
 	updateUserProfile,
-	getAllUsers,
-	editUserAdminStatus,
+	getUsers,
+	getUser,
+	editAdminStatus,
 };

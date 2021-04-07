@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSingleProduct } from "../state_management/productsState";
+import { fetchProduct } from "../state_management/productsState";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
 import { getStockOptions } from "../utils/helpers";
@@ -27,7 +27,7 @@ function SingleProduct({ match, history }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(fetchSingleProduct(match.params.id));
+		dispatch(fetchProduct(match.params.id));
 	}, [dispatch, match.params.id]);
 
 	const addToCartHandler = () => {

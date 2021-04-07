@@ -39,7 +39,7 @@ export const fetchProducts = () => async dispatch => {
 	}
 };
 
-export const fetchSingleProduct = productId => async dispatch => {
+export const fetchProduct = productId => async dispatch => {
 	try {
 		dispatch(SINGLE_PRODUCT_FETCHING_REQUEST());
 		const {
@@ -78,7 +78,7 @@ export const updateProduct = (productId, updatedData) => async dispatch => {
 		dispatch(UPDATE_PRODUCT_REQUEST());
 		const {
 			data: { data },
-		} = await http.put(`/products/${productId}/update`, updatedData);
+		} = await http.put(`/products/${productId}`, updatedData);
 		dispatch(UPDATE_PRODUCT_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -94,7 +94,7 @@ export const updateProduct = (productId, updatedData) => async dispatch => {
 export const deleteProduct = productId => async dispatch => {
 	try {
 		dispatch(DELETE_PRODUCT_REQUEST());
-		await http.delete(`/products/${productId}/delete`);
+		await http.delete(`/products/${productId}`);
 		dispatch(DELETE_PRODUCT_SUCCESS());
 	} catch (ex) {
 		dispatch(

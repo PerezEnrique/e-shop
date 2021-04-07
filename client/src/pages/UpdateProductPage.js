@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {
 	updateProduct,
 	resetProductUpdateProcess,
-	fetchSingleProduct,
+	fetchProduct,
 } from "../state_management/productsState";
 import { validateProductUpdate } from "../utils/validation";
 import { objectIsEmpty } from "../utils/helpers";
@@ -30,7 +30,7 @@ function UpdateProductPage({ history, match }) {
 			history.push(`/admin/products-list`);
 		} else {
 			if (objectIsEmpty(singleProduct) || singleProduct._id !== match.params.id) {
-				dispatch(fetchSingleProduct(match.params.id));
+				dispatch(fetchProduct(match.params.id));
 			} else {
 				setName(singleProduct.name);
 				setBrand(singleProduct.brand);

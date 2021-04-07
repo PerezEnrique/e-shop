@@ -12,7 +12,7 @@ async function getProducts(req, res) {
 //route: GET /products/:id
 //access: public
 //desc: get a single products
-async function getSingleProduct(req, res) {
+async function getProduct(req, res) {
 	const product = await Product.findById(req.params.id);
 	if (!product) {
 		return res.status(404).json({
@@ -47,7 +47,7 @@ async function createProduct(req, res) {
 	return res.status(201).json({ success: true, data: createdProduct });
 }
 
-//route: PUT /products/:id/update
+//route: PUT /products/:id
 //access: private (and only for admins)
 //desc: updates a product
 async function updateProduct(req, res) {
@@ -94,7 +94,7 @@ async function deleteProduct(req, res) {
 
 module.exports = {
 	getProducts,
-	getSingleProduct,
+	getProduct,
 	createProduct,
 	updateProduct,
 	deleteProduct,

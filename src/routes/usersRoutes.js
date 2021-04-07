@@ -5,15 +5,16 @@ const {
 	createUser,
 	authenticateUser,
 	updateUserProfile,
-	getAllUsers,
-	getASingleUser,
-	editUserAdminStatus,
+	getUsers,
+	getUser,
+	editAdminStatus,
 } = require("../controllers/userController");
 
-router.get("/admin/get-users", [auth, admin], getAllUsers);
-router.put("/admin/:id/edit-status", [auth, admin], editUserAdminStatus);
+router.put("/:id/edit-status", [auth, admin], editAdminStatus);
 router.post("/sign-up", createUser);
 router.post("/log-in", authenticateUser);
+router.get("/:id", [auth, admin], getUser);
+router.get("/", [auth, admin], getUsers);
 router.put("/", auth, updateUserProfile);
 
 module.exports = router;

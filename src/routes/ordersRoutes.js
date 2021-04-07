@@ -9,10 +9,10 @@ const {
 	updateOrderToPaid,
 } = require("../controllers/ordersController");
 
-router.post("/", auth, createOrder);
-router.get("/", [auth, admin], getOrders);
 router.get("/my-orders", auth, getUserOrders);
 router.put("/:id/pay", auth, updateOrderToPaid);
 router.get("/:id", auth, getOrder);
+router.post("/", auth, createOrder);
+router.get("/", [auth, admin], getOrders);
 
 module.exports = router;

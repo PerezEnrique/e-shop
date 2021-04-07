@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { editUserAdminStatus, resetUpdateProcess } from "../state_management/usersState";
+import {
+	fetchUser,
+	editAdminStatus,
+	resetUpdateProcess,
+} from "../state_management/usersState";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function EditUserStatus({ match, history }) {
-	const { usersList, successfulUpdate, loading, error } = useSelector(
-		state => state.users
-	);
-	const user = usersList.find(user => user._id === match.params.id);
+	const { user, successfulUpdate, loading, error } = useSelector(state => state.users);
 	const [isAdmin, setIsAdmin] = useState(user.isAdmin);
 	const dispatch = useDispatch();
 
@@ -18,11 +19,14 @@ function EditUserStatus({ match, history }) {
 			dispatch(resetUpdateProcess());
 			history.push("/admin/users-list");
 		}
-	}, [successfulUpdate, dispatch, history]);
+		if (!user._id || user._id !== match.params.id) {
+			dispatch(fetchUser(match.params.id));
+		}
+	}, [successfulUpdate, user._id, match.params.id, dispatch, history]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		dispatch(editUserAdminStatus(user._id, isAdmin));
+		dispatch(editAdminStatus(user._id, isAdmin));
 	};
 
 	return (

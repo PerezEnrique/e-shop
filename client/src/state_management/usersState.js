@@ -16,6 +16,9 @@ const USER_UPDATE_PROFILE_FAILS = createAction("USER_UPDATE_PROFILE_FAILS");
 const USERS_FETCHING_REQUEST = createAction("USERS_FETCHING_REQUEST");
 const USERS_FETCHING_SUCCESS = createAction("USERS_FETCHING_SUCCESS");
 const USERS_FETCHING_FAILS = createAction("USERS_FETCHING_FAILS");
+const USER_FETCHING_REQUEST = createAction("USER_FETCHING_REQUEST");
+const USER_FETCHING_SUCCESS = createAction("USER_FETCHING_SUCCESS");
+const USER_FETCHING_FAILS = createAction("USER_FETCHING_FAILS");
 const EDIT_ADMIN_STATUS_REQUEST = createAction("EDIT_ADMIN_STATUS_REQUEST");
 const EDIT_ADMIN_STATUS_SUCCESS = createAction("EDIT_ADMIN_STATUS_SUCCESS");
 const EDIT_ADMIN_STATUS_FAILS = createAction("EDIT_ADMIN_STATUS_FAILS");
@@ -29,7 +32,7 @@ export const signUp = userData => async dispatch => {
 		const {
 			headers,
 			data: { data },
-		} = await http.post("/user/sign-up", userData);
+		} = await http.post("/users/sign-up", userData);
 		dispatch(USER_SIGNUP_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -50,7 +53,7 @@ export const logIn = userData => async dispatch => {
 		const {
 			headers,
 			data: { data },
-		} = await http.post("/user/log-in", userData);
+		} = await http.post("/users/log-in", userData);
 		dispatch(USER_LOGIN_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -79,7 +82,7 @@ export const updateProfile = dataToUpdate => async dispatch => {
 		const {
 			headers,
 			data: { data },
-		} = await http.put("/user", dataToUpdate);
+		} = await http.put("/users", dataToUpdate);
 		dispatch(USER_UPDATE_PROFILE_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -99,7 +102,7 @@ export const fetchUsers = () => async dispatch => {
 		dispatch(USERS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get("/user/admin/get-users");
+		} = await http.get("/users");
 		dispatch(USERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -112,10 +115,28 @@ export const fetchUsers = () => async dispatch => {
 	}
 };
 
-export const editUserAdminStatus = (userId, isAdmin) => async dispatch => {
+export const fetchUser = userId => async dispatch => {
+	try {
+		dispatch(USERS_FETCHING_REQUEST());
+		const {
+			data: { data },
+		} = await http.get(`/users/${userId}`);
+		dispatch(USER_FETCHING_SUCCESS(data));
+	} catch (ex) {
+		dispatch(
+			USER_FETCHING_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
+export const editAdminStatus = (userId, isAdmin) => async dispatch => {
 	try {
 		dispatch(EDIT_ADMIN_STATUS_REQUEST());
-		await http.put(`/user/admin/${userId}/edit-status`, { isAdmin });
+		await http.put(`/users/${userId}/edit-status`, { isAdmin });
 		dispatch(EDIT_ADMIN_STATUS_SUCCESS());
 	} catch (ex) {
 		dispatch(
@@ -136,9 +157,10 @@ const initialState = {
 	currentUser: localStorage.getItem("authToken")
 		? decodeToken(localStorage.getItem("authToken"))
 		: null,
+	users: [],
+	user: {},
 	loading: false,
 	successfulUpdate: false,
-	users: [],
 	error: null,
 };
 
@@ -174,6 +196,12 @@ export default function userReducer(state = initialState, action) {
 		case USERS_FETCHING_SUCCESS.type:
 			return { ...state, users: action.payload, loading: false };
 		case USERS_FETCHING_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case USER_FETCHING_REQUEST.type:
+			return { ...state, loading: true, error: null };
+		case USER_FETCHING_SUCCESS.type:
+			return { ...state, user: action.payload, loading: false };
+		case USER_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case EDIT_ADMIN_STATUS_REQUEST.type:
 			return { ...state, loading: true, successfulUpdate: false, error: null };
