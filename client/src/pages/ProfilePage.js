@@ -130,27 +130,29 @@ function ProfilePage() {
 				</section>
 				<section className="col-md-8 mt-4">
 					<h2>My orders</h2>
-					<table className="table table-striped">
-						<thead>
-							<tr>
-								<th id="id">Id</th>
-								<th id="date">Date</th>
-								<th id="total">Total</th>
-								<th id="payment-status">Paid</th>
-								<th id="delivery-status">Delivered</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{loadingOrders ? (
-								<Spinner />
-							) : ordersError ? (
-								<Alert type="danger" message={ordersError} />
-							) : (
-								userOrders.map(order => <OrderRow key={order._id} order={order} />)
-							)}
-						</tbody>
-					</table>
+					{loadingOrders ? (
+						<Spinner />
+					) : ordersError ? (
+						<Alert danger="danger" message={ordersError} />
+					) : (
+						<table className="table table-striped">
+							<thead>
+								<tr>
+									<th id="id">Id</th>
+									<th id="date">Date</th>
+									<th id="total">Total</th>
+									<th id="payment-status">Paid</th>
+									<th id="delivery-status">Delivered</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{userOrders.map(order => (
+									<OrderRow key={order._id} order={order} />
+								))}
+							</tbody>
+						</table>
+					)}
 				</section>
 			</div>
 		</main>
