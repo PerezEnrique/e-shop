@@ -77,7 +77,8 @@ async function updateOrderToPaid(req, res) {
 		});
 	}
 
-	(order.isPaid = true), (order.paidAt = Date.now());
+	order.isPaid = true;
+	order.paidAt = Date.now();
 	order.paymentResult = {
 		id: req.body.id,
 		status: req.body.status,
@@ -89,4 +90,32 @@ async function updateOrderToPaid(req, res) {
 	return res.status(201).json({ success: true, data: updatedOrder });
 }
 
-module.exports = { createOrder, getOrders, getOrder, getUserOrders, updateOrderToPaid };
+// route: PUT /orders/:id/mark-delivered
+//access: private
+//desc: update order to paid
+async function markOrderAsDelivered(req, res) {
+	const order = await Order.findByIdAndUpdate(
+		req.params.id,
+		{
+			isDelivered: true,
+			deliveredAt: Date.now(),
+		},
+		{ new: true, useFindAndModify: false }
+	);
+	if (!order)
+		return res
+			.status(404)
+			.json({ success: false, errorMessage: "Couldn't find order with the provided id" });
+
+	const updatedOrder = await order.save();
+	return res.status(201).json({ success: true, data: updatedOrder });
+}
+
+module.exports = {
+	createOrder,
+	getOrders,
+	getOrder,
+	getUserOrders,
+	updateOrderToPaid,
+	markOrderAsDelivered,
+};

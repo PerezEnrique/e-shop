@@ -17,6 +17,10 @@ const ORDER_PAY_REQUEST = createAction("ORDER_PAY_REQUEST");
 const ORDER_PAY_SUCCESS = createAction("ORDER_PAY_SUCCESS");
 const ORDER_PAY_FAILS = createAction("ORDER_PAY_FAILS");
 const ORDER_PAY_RESET = createAction("ORDER_PAY_RESET");
+const ORDER_DELIVER_REQUEST = createAction("ORDER_DELIVER_REQUEST");
+const ORDER_DELIVER_SUCCESS = createAction("ORDER_DELIVER_SUCCESS");
+const ORDER_DELIVER_FAILS = createAction("ORDER_DELIVER_FAILS");
+const ORDER_DELIVER_RESET = createAction("ORDER_DELIVER_RESET");
 
 export const fetchOrders = () => async dispatch => {
 	try {
@@ -24,7 +28,6 @@ export const fetchOrders = () => async dispatch => {
 		const {
 			data: { data },
 		} = await http.get("/orders");
-		console.log(data);
 		dispatch(ORDERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -109,8 +112,30 @@ export const payOrder = (orderId, paymentResult) => async dispatch => {
 	}
 };
 
+export const deliverOrder = orderId => async dispatch => {
+	try {
+		dispatch(ORDER_DELIVER_REQUEST());
+		const {
+			data: { data },
+		} = await http.put(`/orders/${orderId}/mark-delivered`);
+		dispatch(ORDER_DELIVER_SUCCESS(data));
+	} catch (ex) {
+		dispatch(
+			ORDER_DELIVER_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
 export const resetOrderPaymentProcess = () => dispatch => {
 	dispatch(ORDER_PAY_RESET());
+};
+
+export const resetOrderDeliverProcess = () => dispatch => {
+	dispatch(ORDER_DELIVER_RESET());
 };
 
 const initialState = {
@@ -122,6 +147,7 @@ const initialState = {
 	},
 	successfulCreation: false,
 	successfulPayment: false,
+	successfulDeliver: false,
 	userOrders: [],
 	loading: false,
 	error: null,
@@ -171,6 +197,19 @@ export default function orderReducer(state = initialState, action) {
 			return { ...state, loading: false, error: action.payload };
 		case ORDER_PAY_RESET.type:
 			return { ...state, successfulPayment: false };
+		case ORDER_DELIVER_REQUEST.type:
+			return { ...state, loading: true };
+		case ORDER_DELIVER_SUCCESS.type:
+			return {
+				...state,
+				currentOrder: action.payload,
+				loading: false,
+				successfulDeliver: true,
+			};
+		case ORDER_DELIVER_FAILS.type:
+			return { ...state, loading: false, error: action.payload };
+		case ORDER_DELIVER_RESET.type:
+			return { ...state, successfulDeliver: false };
 		default:
 			return state;
 	}

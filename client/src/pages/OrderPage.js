@@ -7,15 +7,22 @@ import {
 	fetchOrder,
 	payOrder,
 	resetOrderPaymentProcess,
+	resetOrderDeliverProcess,
+	deliverOrder,
 } from "../state_management/ordersState";
 import ProductListItem from "../components/ProductListItem";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function OrderPage({ match }) {
-	const { currentOrder, loading, successfulPayment, error } = useSelector(
-		state => state.orders
-	);
+	const {
+		currentOrder,
+		loading,
+		successfulPayment,
+		successfulDeliver,
+		error,
+	} = useSelector(state => state.orders);
+	const { currentUser } = useSelector(state => state.users);
 	const {
 		_id,
 		user: { name, email },
@@ -48,13 +55,7 @@ function OrderPage({ match }) {
 			document.body.appendChild(script);
 		};
 
-		if (
-			currentOrder.orderItems.length < 1 ||
-			successfulPayment ||
-			currentOrder._id !== match.params.id
-		) {
-			dispatch(resetCart());
-			dispatch(resetOrderPaymentProcess());
+		if (currentOrder.orderItems.length < 1 || currentOrder._id !== match.params.id) {
 			dispatch(fetchOrder(match.params.id));
 		} else if (!currentOrder.isPaid) {
 			if (!window.paypal) {
@@ -63,10 +64,27 @@ function OrderPage({ match }) {
 				setSDKReady(true);
 			}
 		}
-	}, [dispatch, match.params.id, currentOrder, successfulPayment]);
+	}, [dispatch, match.params.id, currentOrder]);
+
+	useEffect(() => {
+		if (successfulPayment) {
+			dispatch(resetCart());
+			dispatch(resetOrderPaymentProcess());
+		}
+	}, [successfulPayment, dispatch]);
+
+	useEffect(() => {
+		if (successfulDeliver) {
+			dispatch(resetOrderDeliverProcess());
+		}
+	}, [successfulDeliver, dispatch]);
 
 	const successPaymentHandler = paymentResult => {
 		dispatch(payOrder(match.params.id, paymentResult));
+	};
+
+	const handleDeliver = () => {
+		dispatch(deliverOrder(match.params.id));
 	};
 
 	return (
@@ -150,6 +168,14 @@ function OrderPage({ match }) {
 									)}
 								</React.Fragment>
 							)}
+							{currentUser &&
+								currentUser.isAdmin &&
+								currentOrder.isPaid &&
+								!currentOrder.isDelivered && (
+									<button className="btn btn-block btn-primary" onClick={handleDeliver}>
+										Mark as Delivered
+									</button>
+								)}
 						</div>
 					</section>
 				</div>
