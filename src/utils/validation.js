@@ -64,13 +64,30 @@ function validateProductData(productData) {
 	const schema = Joi.object({
 		name: Joi.string().required().label("Name"),
 		brand: Joi.string().required().label("Brand"),
-		price: Joi.number().required().positive().label("Price"),
+		price: Joi.number().required().min(0).label("Price"),
 		description: Joi.string().required().label("Description"),
-		countInStock: Joi.number().required().positive().label("Count in stock"),
+		countInStock: Joi.number().required().min(0).label("Count in stock"),
 	});
 
 	let validationError = null;
 	const { error } = schema.validate(productData, { abortEarly: false });
+	if (error) {
+		validationError = "";
+		for (let item of error.details) {
+			validationError += ` ${item.message}.`;
+		}
+	}
+	return validationError;
+}
+
+function validateReview(review) {
+	const schema = Joi.object({
+		rating: Joi.number().required().min(0).max(5).label("Rating"),
+		comment: Joi.string().required().label("Comment"),
+	});
+
+	let validationError = null;
+	const { error } = schema.validate(review, { abortEarly: false });
 	if (error) {
 		validationError = "";
 		for (let item of error.details) {
@@ -86,4 +103,5 @@ module.exports = {
 	validateUserUpdate,
 	validateStatusValue,
 	validateProductData,
+	validateReview,
 };

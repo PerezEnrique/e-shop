@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
-const { validateProductData } = require("../utils/validation");
+const { Schema: Review } = require("../models/Review");
+const { validateProductData, validateReview } = require("../utils/validation");
 
 //route: GET /products
 //access: public
@@ -92,10 +93,51 @@ async function deleteProduct(req, res) {
 	return res.status(200).json({ success: true, data: "Product successfully removed" });
 }
 
+async function reviewProduct(req, res) {
+	const { rating, comment } = req.body;
+
+	const validationError = validateReview(req.body);
+	if (validationError)
+		return res.status(400).json({ success: false, errorMessage: validationError });
+
+	const product = await Product.findById(req.params.id);
+
+	if (!product) {
+		return res.status(404).json({
+			success: false,
+			errorMessage: "Couldn't find product with the provided id",
+		});
+	}
+
+	const alreadyReviewed = product.reviews.find(
+		review => review.user.toString() === req.user._id.toString()
+	);
+
+	if (alreadyReviewed) {
+		return res
+			.status(400)
+			.json({ success: false, errorMessage: "Product already reviewed" });
+	}
+
+	const review = new Review({
+		user: req.user._id,
+		rating: Number(rating),
+		comment,
+	});
+
+	product.reviews.push(review);
+	product.rating =
+		product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+	await product.save();
+	res.status(201).json({ success: true, data: product });
+}
+
 module.exports = {
 	getProducts,
 	getProduct,
 	createProduct,
 	updateProduct,
 	deleteProduct,
+	reviewProduct,
 };

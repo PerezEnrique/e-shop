@@ -8,9 +8,11 @@ const {
 	updateProduct,
 	getProduct,
 	deleteProduct,
+	reviewProduct,
 } = require("../controllers/productsController");
 
 router.delete("/:id", [auth, admin], deleteProduct);
+router.put("/:id/review", auth, reviewProduct);
 router.put("/:id", [auth, admin, upload.single("image")], updateProduct);
 router.get("/:id", getProduct);
 router.post("/", [auth, admin, upload.single("image")], createProduct);
