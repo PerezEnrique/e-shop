@@ -20,6 +20,10 @@ const DELETE_PRODUCT_REQUEST = createAction("DELETE_PRODUCT_REQUEST");
 const DELETE_PRODUCT_SUCCESS = createAction("DELETE_PRODUCT_SUCCESS");
 const DELETE_PRODUCT_FAILS = createAction("DELETE_PRODUCT_FAILS");
 const DELETE_PRODUCT_RESET = createAction("DELETE_PRODUCT_RESET");
+const REVIEW_PRODUCT_REQUEST = createAction("REVIEW_PRODUCT_REQUEST");
+const REVIEW_PRODUCT_SUCCESS = createAction("REVIEW_PRODUCT_SUCCESS");
+const REVIEW_PRODUCT_FAILS = createAction("REVIEW_PRODUCT_FAILS");
+const REVIEW_PRODUCT_RESET = createAction("REVIEW_PRODUCT_RESET");
 
 export const fetchProducts = () => async dispatch => {
 	try {
@@ -107,6 +111,24 @@ export const deleteProduct = productId => async dispatch => {
 	}
 };
 
+export const reviewProduct = (productId, rating, comment) => async dispatch => {
+	try {
+		dispatch(REVIEW_PRODUCT_REQUEST());
+		const {
+			data: { data },
+		} = await http.put(`/products/${productId}/review`, { rating, comment });
+		dispatch(REVIEW_PRODUCT_SUCCESS(data));
+	} catch (ex) {
+		dispatch(
+			REVIEW_PRODUCT_FAILS(
+				ex.response && ex.response.data.errorMessage
+					? ex.response.data.errorMessage
+					: `Error ocurred. ${ex.message}`
+			)
+		);
+	}
+};
+
 export const resetProductCreationProcess = () => dispatch => {
 	dispatch(CREATE_PRODUCT_RESET());
 };
@@ -118,16 +140,21 @@ export const resetProductUpdateProcess = () => dispatch => {
 export const resetProductDeletionProcess = () => dispatch => {
 	dispatch(DELETE_PRODUCT_RESET());
 };
+export const resetProductReviewProcess = () => dispatch => {
+	dispatch(REVIEW_PRODUCT_RESET());
+};
 
 //REDUCER
 const initialState = {
 	products: [],
-	singleProduct: {},
+	product: {},
 	loading: false,
 	successfulCreation: false,
 	successfulUpdate: false,
 	successfulDeletion: false,
+	successfulReview: false,
 	error: null,
+	errorReview: null,
 };
 
 export default function productReducer(state = initialState, action) {
@@ -141,7 +168,7 @@ export default function productReducer(state = initialState, action) {
 		case SINGLE_PRODUCT_FETCHING_REQUEST.type:
 			return { ...state, loading: true, error: null };
 		case SINGLE_PRODUCT_FETCHING_SUCCESS.type:
-			return { ...state, singleProduct: action.payload, loading: false };
+			return { ...state, product: action.payload, loading: false };
 		case SINGLE_PRODUCT_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case CREATE_PRODUCT_REQUEST.type:
@@ -157,7 +184,7 @@ export default function productReducer(state = initialState, action) {
 		case UPDATE_PRODUCT_SUCCESS.type:
 			return {
 				...state,
-				singleProduct: action.payload,
+				product: action.payload,
 				loading: false,
 				successfulUpdate: true,
 			};
@@ -173,6 +200,19 @@ export default function productReducer(state = initialState, action) {
 			return { ...state, loading: false, error: action.payload };
 		case DELETE_PRODUCT_RESET.type:
 			return { ...state, successfulDeletion: false };
+		case REVIEW_PRODUCT_REQUEST.type:
+			return { ...state, loading: true, errorReview: null };
+		case REVIEW_PRODUCT_SUCCESS.type:
+			return {
+				...state,
+				product: action.payload,
+				loading: false,
+				successfulReview: true,
+			};
+		case REVIEW_PRODUCT_FAILS.type:
+			return { ...state, loading: false, errorReview: action.payload };
+		case REVIEW_PRODUCT_RESET.type:
+			return { ...state, successfulReview: false };
 		default:
 			return state;
 	}

@@ -5,7 +5,7 @@ import { FaStar, FaStarHalf } from "react-icons/fa";
 function Rating({ value, text }) {
 	return (
 		<IconContext.Provider value={{ className: "star" }}>
-			<div className="mb-2">
+			<div>
 				<span>{value >= 1 ? <FaStar /> : value >= 0.5 ? <FaStarHalf /> : ""}</span>
 				<span>{value >= 2 ? <FaStar /> : value >= 1.5 ? <FaStarHalf /> : ""}</span>
 				<span>{value >= 3 ? <FaStar /> : value >= 2.5 ? <FaStarHalf /> : ""}</span>

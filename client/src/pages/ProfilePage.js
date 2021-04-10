@@ -118,7 +118,7 @@ function ProfilePage() {
 
 							{error && <Alert type="danger" message={error} />}
 							{successfulUpdate && (
-								<div className="alert alert-success">Profile successfuly updated</div>
+								<Alert type="success" message="Profile successfuly updated" />
 							)}
 							<div className="text-center">
 								<button className="mb-2 btn btn-primary" type="submit" disabled={loading}>

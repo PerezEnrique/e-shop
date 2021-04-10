@@ -14,7 +14,7 @@ async function getProducts(req, res) {
 //access: public
 //desc: get a single products
 async function getProduct(req, res) {
-	const product = await Product.findById(req.params.id);
+	const product = await Product.findById(req.params.id).populate("reviews.user", "name");
 	if (!product) {
 		return res.status(404).json({
 			success: false,
@@ -78,9 +78,9 @@ async function updateProduct(req, res) {
 	return res.status(201).json({ success: true, data: updatedProduct });
 }
 
-//route: DELETE /products/:id
-//access: private (and only for admins)
-//desc: delete a product
+//route: PUT /products/:id/review
+//access: private
+//desc: review a product
 async function deleteProduct(req, res) {
 	const product = await Product.findById(req.params.id);
 	if (!product) {
@@ -129,6 +129,7 @@ async function reviewProduct(req, res) {
 	product.rating =
 		product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
 
+	await product.populate("reviews.user", "name").execPopulate();
 	await product.save();
 	res.status(201).json({ success: true, data: product });
 }
