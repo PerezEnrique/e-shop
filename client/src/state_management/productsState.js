@@ -25,12 +25,12 @@ const REVIEW_PRODUCT_SUCCESS = createAction("REVIEW_PRODUCT_SUCCESS");
 const REVIEW_PRODUCT_FAILS = createAction("REVIEW_PRODUCT_FAILS");
 const REVIEW_PRODUCT_RESET = createAction("REVIEW_PRODUCT_RESET");
 
-export const fetchProducts = (searchTerm = "") => async dispatch => {
+export const fetchProducts = (searchTerm = "", currentPage = "") => async dispatch => {
 	try {
 		dispatch(PRODUCTS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get(`/products?term=${searchTerm}`);
+		} = await http.get(`/products?term=${searchTerm}&page=${currentPage}`);
 		dispatch(PRODUCTS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -153,6 +153,8 @@ const initialState = {
 	successfulUpdate: false,
 	successfulDeletion: false,
 	successfulReview: false,
+	currentPage: null,
+	pages: null,
 	error: null,
 	errorReview: null,
 };
@@ -162,7 +164,13 @@ export default function productReducer(state = initialState, action) {
 		case PRODUCTS_FETCHING_REQUEST.type:
 			return { ...state, loading: true, error: null };
 		case PRODUCTS_FETCHING_SUCCESS.type:
-			return { ...state, products: action.payload, loading: false };
+			return {
+				...state,
+				products: action.payload.products,
+				loading: false,
+				pages: action.payload.pages,
+				currentPage: action.payload.currentPage,
+			};
 		case PRODUCTS_FETCHING_FAILS.type:
 			return { ...state, loading: false, error: action.payload };
 		case SINGLE_PRODUCT_FETCHING_REQUEST.type:

@@ -6,10 +6,18 @@ const { validateProductData, validateReview } = require("../utils/validation");
 //access: public
 //desc: get all products
 async function getProducts(req, res) {
+	const pageSize = 8;
+	const currentPage = Number(req.query.page) || 1;
 	const query = req.query.term ? { name: { $regex: req.query.term, $options: "i" } } : {};
 
-	const products = await Product.find({ ...query });
-	return res.status(200).json({ success: true, data: products });
+	const productCount = await Product.countDocuments({ ...query });
+	const products = await Product.find({ ...query })
+		.skip((currentPage - 1) * pageSize)
+		.limit(pageSize);
+	return res.status(200).json({
+		success: true,
+		data: { products, currentPage, pages: Math.ceil(productCount / pageSize) },
+	});
 }
 
 //route: GET /products/:id

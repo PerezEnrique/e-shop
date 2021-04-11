@@ -32,6 +32,7 @@ function App() {
 					component={EditUserStatusPage}
 				/>
 				<PrivateRoute path="/admin/create-product" component={CreateProductPage} />
+				<PrivateRoute path="/admin/products-list/:page" component={ProductListPage} />
 				<PrivateRoute path="/admin/products-list" component={ProductListPage} />
 				<PrivateRoute path="/admin/orders-list" component={OrderListPage} />
 				<PrivateRoute path="/admin/users-list" component={UsersListPage} />
@@ -48,7 +49,9 @@ function App() {
 				<Route path="/not-found" component={PageNotFound} />
 				<PrivateRoute path="/user" component={ProfilePage} />
 				<Route path="/cart" component={CartPage} />
+				<Route path="/search/:term/page/:page" component={HomePage} />
 				<Route path="/search/:term" component={HomePage} />
+				<Route path="/page/:page" component={HomePage} />
 				<Route exact path="/" component={HomePage} />
 				<Redirect to="/not-found" />
 			</Switch>
