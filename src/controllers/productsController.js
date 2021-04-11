@@ -6,7 +6,9 @@ const { validateProductData, validateReview } = require("../utils/validation");
 //access: public
 //desc: get all products
 async function getProducts(req, res) {
-	const products = await Product.find({});
+	const query = req.query.term ? { name: { $regex: req.query.term, $options: "i" } } : {};
+
+	const products = await Product.find({ ...query });
 	return res.status(200).json({ success: true, data: products });
 }
 

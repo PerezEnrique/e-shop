@@ -5,11 +5,12 @@ import ProductCard from "../components/ProductCard";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
-function HomePage() {
+function HomePage({ match }) {
 	const { products, loading, error } = useSelector(state => state.products);
+	const searchTerm = match.params.term;
 	const dispatch = useDispatch();
 
-	useEffect(() => dispatch(fetchProducts()), [dispatch]);
+	useEffect(() => dispatch(fetchProducts(searchTerm)), [dispatch, searchTerm]);
 
 	return (
 		<main className="container" role="main">

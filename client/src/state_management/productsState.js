@@ -25,12 +25,12 @@ const REVIEW_PRODUCT_SUCCESS = createAction("REVIEW_PRODUCT_SUCCESS");
 const REVIEW_PRODUCT_FAILS = createAction("REVIEW_PRODUCT_FAILS");
 const REVIEW_PRODUCT_RESET = createAction("REVIEW_PRODUCT_RESET");
 
-export const fetchProducts = () => async dispatch => {
+export const fetchProducts = (searchTerm = "") => async dispatch => {
 	try {
 		dispatch(PRODUCTS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get("/products");
+		} = await http.get(`/products?term=${searchTerm}`);
 		dispatch(PRODUCTS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(

@@ -48,6 +48,7 @@ function App() {
 				<Route path="/not-found" component={PageNotFound} />
 				<PrivateRoute path="/user" component={ProfilePage} />
 				<Route path="/cart" component={CartPage} />
+				<Route path="/search/:term" component={HomePage} />
 				<Route exact path="/" component={HomePage} />
 				<Redirect to="/not-found" />
 			</Switch>

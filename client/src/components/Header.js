@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import SeachBox from "./SeachBox";
 
 function Header() {
 	const { currentUser } = useSelector(state => state.users);
@@ -18,6 +19,7 @@ function Header() {
 					<Link className="navbar-brand text-primary font-weight-bold" to="/">
 						E-SHOP
 					</Link>
+					<Route render={({ history }) => <SeachBox history={history} />} />
 					<button
 						className="navbar-toggler"
 						type="button"
