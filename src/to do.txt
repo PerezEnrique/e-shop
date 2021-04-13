@@ -1,3 +1,4 @@
 find a wait to handle errors from multer correctly
 div as child of table
 pass the alert text through childrens. Also add a prop for width
+fis not paid on delivered space
