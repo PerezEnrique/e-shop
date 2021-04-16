@@ -12,7 +12,7 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 
 function UpdateProductPage({ history, match }) {
-	const { singleProduct, successfulUpdate, loading, error } = useSelector(
+	const { product, successfulUpdate, loading, error } = useSelector(
 		state => state.products
 	);
 	const [name, setName] = useState("");
@@ -29,17 +29,17 @@ function UpdateProductPage({ history, match }) {
 			dispatch(resetProductUpdateProcess());
 			history.push(`/admin/products-list`);
 		} else {
-			if (objectIsEmpty(singleProduct) || singleProduct._id !== match.params.id) {
+			if (objectIsEmpty(product) || product._id !== match.params.id) {
 				dispatch(fetchProduct(match.params.id));
 			} else {
-				setName(singleProduct.name);
-				setBrand(singleProduct.brand);
-				setPrice(singleProduct.price);
-				setDescription(singleProduct.description);
-				setCountInStock(singleProduct.countInStock);
+				setName(product.name);
+				setBrand(product.brand);
+				setPrice(product.price);
+				setDescription(product.description);
+				setCountInStock(product.countInStock);
 			}
 		}
-	}, [successfulUpdate, dispatch, history, match.params.id, singleProduct]);
+	}, [successfulUpdate, dispatch, history, match.params.id, product]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
@@ -63,7 +63,7 @@ function UpdateProductPage({ history, match }) {
 			if (image.name) {
 				formData.append("image", image);
 			}
-			dispatch(updateProduct(singleProduct._id, formData));
+			dispatch(updateProduct(product._id, formData));
 		}
 	};
 
@@ -114,6 +114,7 @@ function UpdateProductPage({ history, match }) {
 									<input
 										className="form-control"
 										type="number"
+										step=".01"
 										id="price"
 										name="price"
 										min={0}

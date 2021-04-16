@@ -99,6 +99,7 @@ function CreateProductPage({ history }) {
 									<input
 										className="form-control"
 										type="number"
+										step=".01"
 										id="price"
 										name="price"
 										min={0}
