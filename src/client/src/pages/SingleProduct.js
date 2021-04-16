@@ -20,8 +20,8 @@ function SingleProduct({ match, history }) {
 			brand,
 			image,
 			price,
-			rating,
 			reviews,
+			totalRating,
 			description,
 			countInStock,
 		},
@@ -74,7 +74,7 @@ function SingleProduct({ match, history }) {
 								<section className="col-md-6 py-3 pl-4 pr-5">
 									<h1 className="h2">{name}</h1>
 									<Rating
-										value={rating}
+										value={totalRating}
 										text={reviews ? `${reviews.length} reviews` : "0 reviews"}
 									/>
 									<h3 className="h4 mt-2">${price}</h3>

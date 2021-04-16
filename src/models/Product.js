@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema(
 		image: { type: String, required: [true, "A product image is required"] },
 		price: { type: Number, required: [true, "Price is required for the product"] },
 		reviews: [ReviewSchema],
-		rating: { type: Number, default: 0 },
+		totalRating: { type: Number, default: 0 },
 		description: {
 			type: String,
 			required: [true, "A description is required for the product"],
@@ -21,6 +21,12 @@ const ProductSchema = new mongoose.Schema(
 
 ProductSchema.methods.setImgUrl = function (filename) {
 	return `/uploads/${filename}`;
+};
+
+ProductSchema.methods.setTotalRating = function () {
+	return (
+		this.reviews.reduce((acc, review) => acc + review.rating, 0) / this.reviews.length
+	);
 };
 
 module.exports = mongoose.model("Product", ProductSchema);

@@ -53,6 +53,7 @@ async function createProduct(req, res) {
 		countInStock,
 	});
 
+	newProduct.totalRating = newProduct.setTotalRating();
 	newProduct.image = newProduct.setImgUrl(req.file.filename);
 	const createdProduct = await newProduct.save();
 	return res.status(201).json({ success: true, data: createdProduct });
@@ -136,8 +137,7 @@ async function reviewProduct(req, res) {
 	});
 
 	product.reviews.push(review);
-	product.rating =
-		product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+	product.totalRating = product.setTotalRating();
 
 	await product.populate("reviews.user", "name").execPopulate();
 	await product.save();
