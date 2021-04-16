@@ -30,7 +30,10 @@ function HomePage({ match }) {
 			) : (
 				<div className="row">
 					{products.map(product => (
-						<div className="col-sm-12 col-md-6 col-lg-4 col-xl-3" key={product._id}>
+						<div
+							className="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4 d-flex align-items-stretch"
+							key={product._id}
+						>
 							<ProductCard product={product} />
 						</div>
 					))}

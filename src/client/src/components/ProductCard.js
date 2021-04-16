@@ -5,11 +5,11 @@ import Rating from "./Rating";
 function ProductCard({ product }) {
 	const { _id, image, name, rating, numReviews, price } = product;
 	return (
-		<div className="card mb-4 p-3 align-self-stretch">
-			<Link to={`/products/${_id}`}>
-				<img className="card-img-top" src={image} alt={name} />
+		<div className="card p-3 justify-content-between">
+			<Link className="card--media" to={`/products/${_id}`}>
+				<img className="img-fluid" src={image} alt={name} />
 			</Link>
-			<div className="card-body">
+			<div className="card-body card--body">
 				<Link className="text-decoration-none text-dark" to={`/products/${_id}`}>
 					<h2 className="card-title h6">{name}</h2>
 				</Link>
