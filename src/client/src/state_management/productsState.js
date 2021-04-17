@@ -30,7 +30,7 @@ export const fetchProducts = (searchTerm = "", currentPage = "") => async dispat
 		dispatch(PRODUCTS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get(`/products?term=${searchTerm}&page=${currentPage}`);
+		} = await http.get(`/api/products?term=${searchTerm}&page=${currentPage}`);
 		dispatch(PRODUCTS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -48,7 +48,7 @@ export const fetchProduct = productId => async dispatch => {
 		dispatch(SINGLE_PRODUCT_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get(`/products/${productId}`);
+		} = await http.get(`/api/products/${productId}`);
 		dispatch(SINGLE_PRODUCT_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -64,7 +64,7 @@ export const fetchProduct = productId => async dispatch => {
 export const createProduct = productData => async dispatch => {
 	try {
 		dispatch(CREATE_PRODUCT_REQUEST());
-		await http.post("/products", productData);
+		await http.post("/api/products", productData);
 		dispatch(CREATE_PRODUCT_SUCCESS());
 	} catch (ex) {
 		dispatch(
@@ -82,7 +82,7 @@ export const updateProduct = (productId, updatedData) => async dispatch => {
 		dispatch(UPDATE_PRODUCT_REQUEST());
 		const {
 			data: { data },
-		} = await http.put(`/products/${productId}`, updatedData);
+		} = await http.put(`/api/products/${productId}`, updatedData);
 		dispatch(UPDATE_PRODUCT_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -98,7 +98,7 @@ export const updateProduct = (productId, updatedData) => async dispatch => {
 export const deleteProduct = productId => async dispatch => {
 	try {
 		dispatch(DELETE_PRODUCT_REQUEST());
-		await http.delete(`/products/${productId}`);
+		await http.delete(`/api/products/${productId}`);
 		dispatch(DELETE_PRODUCT_SUCCESS());
 	} catch (ex) {
 		dispatch(
@@ -116,7 +116,7 @@ export const reviewProduct = (productId, rating, comment) => async dispatch => {
 		dispatch(REVIEW_PRODUCT_REQUEST());
 		const {
 			data: { data },
-		} = await http.put(`/products/${productId}/review`, { rating, comment });
+		} = await http.put(`/api/products/${productId}/review`, { rating, comment });
 		dispatch(REVIEW_PRODUCT_SUCCESS(data));
 	} catch (ex) {
 		dispatch(

@@ -1,4 +1,4 @@
-import { createAction } from "@reduxjs/toolkit";
+api/import { createAction } from "@reduxjs/toolkit";
 import { decodeToken } from "../utils/helpers";
 import http from "../services/httpServices";
 
@@ -32,7 +32,7 @@ export const signUp = userData => async dispatch => {
 		const {
 			headers,
 			data: { data },
-		} = await http.post("/users/sign-up", userData);
+		} = await http.post("/api/users/sign-up", userData);
 		dispatch(USER_SIGNUP_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -53,7 +53,7 @@ export const logIn = userData => async dispatch => {
 		const {
 			headers,
 			data: { data },
-		} = await http.post("/users/log-in", userData);
+		} = await http.post("/api/users/log-in", userData);
 		dispatch(USER_LOGIN_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -82,7 +82,7 @@ export const updateProfile = dataToUpdate => async dispatch => {
 		const {
 			headers,
 			data: { data },
-		} = await http.put("/users", dataToUpdate);
+		} = await http.put("/api/users", dataToUpdate);
 		dispatch(USER_UPDATE_PROFILE_SUCCESS(data));
 		localStorage.setItem("authToken", headers["x-auth-token"]);
 		http.setAuthToken(localStorage.getItem("authToken"));
@@ -102,7 +102,7 @@ export const fetchUsers = () => async dispatch => {
 		dispatch(USERS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get("/users");
+		} = await http.get("/api/users");
 		dispatch(USERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -120,7 +120,7 @@ export const fetchUser = userId => async dispatch => {
 		dispatch(USERS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get(`/users/${userId}`);
+		} = await http.get(`/api/users/${userId}`);
 		dispatch(USER_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -136,7 +136,7 @@ export const fetchUser = userId => async dispatch => {
 export const editAdminStatus = (userId, isAdmin) => async dispatch => {
 	try {
 		dispatch(EDIT_ADMIN_STATUS_REQUEST());
-		await http.put(`/users/${userId}/edit-status`, { isAdmin });
+		await http.put(`/api/users/${userId}/edit-status`, { isAdmin });
 		dispatch(EDIT_ADMIN_STATUS_SUCCESS());
 	} catch (ex) {
 		dispatch(

@@ -18,14 +18,13 @@ connectDB();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
-app.use("/users", usersRoutes);
-app.use("/products", productsRoutes);
-app.use("/orders", ordersRoutes);
-app.use("/config/paypal", (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));
+app.use("/api/users", usersRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/orders", ordersRoutes);
+app.use("/api/config/paypal", (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "/client/build")));
-
 	app.get("*", (req, res) => res.sendFile(path.join(__dirname, "/index.html")));
 }
 

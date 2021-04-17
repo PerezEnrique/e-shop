@@ -16,7 +16,7 @@ export const addItem = (productId, quantity) => async (dispatch, getState) => {
 		dispatch(PRODUCT_FETCHING_START());
 		const {
 			data: { data },
-		} = await http.get(`/products/${productId}`);
+		} = await http.get(`/api/products/${productId}`);
 		const item = {
 			...data,
 			quantity: Number(quantity),

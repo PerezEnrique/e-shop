@@ -27,7 +27,7 @@ export const fetchOrders = () => async dispatch => {
 		dispatch(ORDERS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get("/orders");
+		} = await http.get("/api/orders");
 		dispatch(ORDERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -45,7 +45,7 @@ export const fetchOrder = orderId => async dispatch => {
 		dispatch(ORDER_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get(`/orders/${orderId}`);
+		} = await http.get(`/api/orders/${orderId}`);
 		dispatch(ORDER_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -63,7 +63,7 @@ export const fetchUserOrders = () => async dispatch => {
 		dispatch(USER_ORDERS_FETCHING_REQUEST());
 		const {
 			data: { data },
-		} = await http.get("/orders/my-orders");
+		} = await http.get("/api/orders/my-orders");
 		dispatch(USER_ORDERS_FETCHING_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -81,7 +81,7 @@ export const createOrder = order => async dispatch => {
 		dispatch(CREATE_ORDER_REQUEST());
 		const {
 			data: { data },
-		} = await http.post("/orders", order);
+		} = await http.post("/api/orders", order);
 		dispatch(CREATE_ORDER_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -99,7 +99,7 @@ export const payOrder = (orderId, paymentResult) => async dispatch => {
 		dispatch(ORDER_PAY_REQUEST());
 		const {
 			data: { data },
-		} = await http.put(`/orders/${orderId}/pay`, paymentResult);
+		} = await http.put(`/api/orders/${orderId}/pay`, paymentResult);
 		dispatch(ORDER_PAY_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
@@ -117,7 +117,7 @@ export const deliverOrder = orderId => async dispatch => {
 		dispatch(ORDER_DELIVER_REQUEST());
 		const {
 			data: { data },
-		} = await http.put(`/orders/${orderId}/mark-delivered`);
+		} = await http.put(`/api/orders/${orderId}/mark-delivered`);
 		dispatch(ORDER_DELIVER_SUCCESS(data));
 	} catch (ex) {
 		dispatch(
